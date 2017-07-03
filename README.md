@@ -1,2 +1,2 @@
 # calculator
-Plain calculator mirco app in HTML/CSS/JS. 
+Plain calculator mirco app in HTML/CSS/JS.
