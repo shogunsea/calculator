@@ -1,6 +1,5 @@
-# calculator
+# calculator  [![CircleCI](https://circleci.com/gh/shogunsea/calculator/tree/master.svg?style=shield)](https://circleci.com/gh/shogunsea/calculator/tree/master)
 Plain calculator mirco app in HTML/CSS/JS.
-
 
 ## Getting started
 
