@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha \"src/**/*.test.js\""
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^4.0.1",
-    "mocha": "^3.4.2"
+    "jest": "^20.0.4",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
   },
   "dependencies": {
     "chalk": "^2.0.1",
