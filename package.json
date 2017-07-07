@@ -12,7 +12,9 @@
   "devDependencies": {
     "jest": "^20.0.4",
     "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0"
+    "webpack-dev-server": "^2.5.0",
+    "del": "^2.2.2",
+    "run-sequence": "^1.2.2"
   },
   "dependencies": {
     "chalk": "^2.0.1",
