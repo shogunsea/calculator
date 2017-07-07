@@ -1,6 +1,7 @@
 'use strict';
 
 const Calculator = require('./calculator');
+const Dispatcher = require('./dispatcher');
 
 describe('Calculator', () => {
   beforeEach(() => {
@@ -72,4 +73,9 @@ describe('Calculator', () => {
     it('calls #displayResult method');
   });
 
+  describe('#displayResult', () => {
+    it('calls Dispatcher.receiveModelAction', () => {
+
+    });
+  })
 });
