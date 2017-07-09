@@ -3,7 +3,7 @@
 const nodemon = require('gulp-nodemon');
 const gulp = require('gulp');
 const {green} = require('chalk');
-// const {execSync} = require('child_process');
+const {execSync} = require('child_process');
 
 const APP_NAME = 'calculator';
 
