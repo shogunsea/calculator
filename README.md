@@ -13,5 +13,5 @@ node@8, npm@5 or yarn@stable
 ### Run tests
 `npm test`
 
-### Build assets(Placeholder)
+### Build assets
 `gulp assets` or `gulp a`

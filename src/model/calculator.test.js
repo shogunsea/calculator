@@ -1,6 +1,6 @@
 'use strict';
 
-const Calculator = require('./index');
+const Calculator = require('./calculator');
 
 describe('Calculator', () => {
   beforeEach(() => {
