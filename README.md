@@ -15,3 +15,8 @@ node@8, npm@5 or yarn@stable
 
 ### Build assets
 `gulp assets` or `gulp a`
+
+### Architecture 
+
+We use flux as its architecture pattern:
+![screenshot](https://raw.githubusercontent.com/shogunsea/calculator/master/spec/calculator_architecture.png)
