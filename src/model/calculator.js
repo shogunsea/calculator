@@ -1,41 +1,39 @@
 'use strict';
 
-const Calculator = function() {
-  this.valA = 0;
-  this.valB = 0;
-  this.result = 0;
-  this.input = 0;
-  this.operator = '';
-};
 
-Calculator.prototype.add = function(valA, valB) {
-  return valA + valB;
-};
+// store-like component: subscribe to events dispatcher emit
+export default class Calculator {
+  constructor() {
+    this.valA = 0;
+    this.valB = 0;
+    this.result = 0;
+    this.input = 0;
+    this.operator = '';
+  }
 
-Calculator.prototype.receiveOperand = function(value) {
-  this.valA = value;
-};
+  receiveAction(action) {
+    if (action === 'something') {
+      // process it
+    }
+  }
 
-Calculator.prototype.receiveOperator = function(operator) {
+  add (valA, valB) {
+    return valA + valB;
+  }
 
-};
+  receiveOperand (value) {
+    this.valA = value;
+  }
 
-Calculator.prototype.displayResult = function() {
+  receiveOperator (operator) {
 
-};
+  }
 
-// Calculator.prototype.evaluate = function() {
+  displayResult () {
 
-// }
+  }
 
-module.exports = Calculator;
-
-// export default class Calculator {
-//   constructor() {
-
-//   }
-
-//   yolo() {
-//     return 1;
-//   }
-// }
+  evaluate () {
+    return 1;
+  }
+}

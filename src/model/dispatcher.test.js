@@ -13,7 +13,9 @@ describe('Dispatcher', () => {
       expect(typeof this.instance.receiveViewAction).toBe('function');
     });
 
-    it('consumes click and keyup event from DOM');
+    it('consumes click and keyup event from DOM', () => {
+
+    });
 
     it('keeps mouth shut when event is not click or keyup');
 

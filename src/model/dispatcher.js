@@ -1,19 +1,26 @@
 'use strict';
 
-const Dispatcher = function() {
+// import all stores
+const calculator = new require('./calculator');
 
-};
+export default class Dispatcher {
+  constructor() {
+    // register call backs
+    this.subscribers = [calculator];
+  }
 
-Dispatcher.prototype.receiveViewAction = function() {
-};
+  receiveViewAction() {
+  }
 
-Dispatcher.prototype.dispatchAction = function() {
-};
+  dispatchAction(action) {
+    for (let subscriber of this.subscribters) {
+      subscriber.receiveAction(action)
+    }
+  }
 
-Dispatcher.prototype.receiveModelAction = function() {
-};
+  receiveModelAction() {
+  }
 
-Dispatcher.prototype.updateView = function() {
-};
-
-module.exports = Dispatcher;
+  updateView() {
+  }
+}
