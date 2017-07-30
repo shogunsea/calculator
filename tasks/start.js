@@ -13,7 +13,7 @@ gulp.task('start', 'Start hot reload server via nodemon.', function() {
   nodemon({
     script: './src/server.js',
     watch: 'src',
-    ext: 'js html css',
+    ext: 'js html scss',
     env: {'NODE_ENV': 'development'},
   }).on('start', function() {
     console.log(green(`Starting assets task...` ));

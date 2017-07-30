@@ -1,11 +1,10 @@
 'use strict';
 
-const Calculator = require('./calculator');
-const Dispatcher = require('./dispatcher');
+const Calculator = require('./calculator_store');
 
-describe('Calculator', () => {
+describe.skip('Calculator store', () => {
   beforeEach(() => {
-    this.instance = new Calculator();
+    this.instance = Calculator;
   });
 
   describe('instance attributes', () => {
@@ -72,10 +71,4 @@ describe('Calculator', () => {
 
     it('calls #displayResult method');
   });
-
-  describe('#displayResult', () => {
-    it('calls Dispatcher.receiveModelAction', () => {
-
-    });
-  })
 });
