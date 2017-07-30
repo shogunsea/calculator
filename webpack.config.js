@@ -1,6 +1,8 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const extractSASS = new ExtractTextPlugin('[name].css');
+const webpack = require('webpack');
+const webpackHMR = new webpack.HotModuleReplacementPlugin();
 
 module.exports = {
   context: path.join(__dirname, '/src/model'),
@@ -10,7 +12,15 @@ module.exports = {
 
   output: {
     path: path.join(__dirname + '/public'),
-    filename: '[name].bundle.js',    
+    filename: '[name].bundle.js',  
+    publicPath: 'http://localhost:8080/public/'  
+  },
+
+  devServer: {
+    hot: true,
+    inline: true,
+    contentBase: ['./src'],
+    publicPath: 'http://localhost:8080/public/'
   },
 
   module: {
@@ -44,6 +54,7 @@ module.exports = {
     ]
   },
   plugins: [
-    extractSASS
+    extractSASS,
+    webpackHMR
   ]
 }
