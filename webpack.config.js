@@ -5,11 +5,9 @@ const webpack = require('webpack');
 const webpackHMR = new webpack.HotModuleReplacementPlugin();
 
 module.exports = {
-  context: path.join(__dirname, '/src/model'),
   entry: { 
-    calculator: './index.js'
+    app: path.join(__dirname, './src/webpack_entry.js'),
   },
-
   output: {
     path: path.join(__dirname + '/public'),
     filename: '[name].bundle.js',  
