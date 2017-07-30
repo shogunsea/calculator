@@ -16,8 +16,7 @@ gulp.task('start', 'Start hot reload server via nodemon.', function() {
     ext: 'js html scss',
     env: {'NODE_ENV': 'development'},
   }).on('start', function() {
-    console.log(green(`Starting assets task...` ));
-    //execSync('gulp assets');
-    execSync('webpack'); //now using webpack to output css files, is this the common practice? (to do webpack stuff in gulp task?)
+    console.log(green(`Kicking off webpack...` ));
+    execSync('webpack');
   });
 });

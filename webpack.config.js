@@ -5,22 +5,20 @@ const webpack = require('webpack');
 const webpackHMR = new webpack.HotModuleReplacementPlugin();
 
 module.exports = {
-  entry: { 
+  entry: {
     app: path.join(__dirname, './src/webpack_entry.js'),
   },
   output: {
     path: path.join(__dirname + '/public'),
-    filename: '[name].bundle.js',  
-    publicPath: 'http://localhost:8080/public/'  
+    filename: '[name].bundle.js',
+    publicPath: 'http://localhost:8080/public/'
   },
-
   devServer: {
     hot: true,
     inline: true,
     contentBase: ['./src'],
     publicPath: 'http://localhost:8080/public/'
   },
-
   module: {
     rules: [
       {
@@ -47,7 +45,7 @@ module.exports = {
         ],
         include: [
           path.resolve(__dirname, 'src')
-        ],        
+        ],
       }
     ]
   },
