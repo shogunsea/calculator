@@ -4,6 +4,7 @@
 
 import ActionTypes from '../actions/action_types';
 import ControllerView from '../views/controller_view';
+import Dispatcher from '../dispatcher';
 
 /**
  *
@@ -15,15 +16,25 @@ import ControllerView from '../views/controller_view';
 
  // " a store registers itself with the dispatcher and provides it with a callback. " ---> Dependency Inversion or not.
 class CalculatorStore {
+  // lower module implements abstraction. contains details.
+  // Store should be initialized with dispatcher instance.
   constructor() {
-    this.view = [];
+    this.dispatcher = Dispatcher.getInstance();
+    this.view = ControllerView; // one to one coupling? How many views should one store talk to?
     this.valA = 0;
     this.valB = 0;
     this.result = 0;
     this.input = 0;
     this.operator = '';
 
-    this.registerView(ControllerView);
+    this.registerToDispatcher();
+  }
+
+  registerToDispatcher() {
+    this.dispatcher.subscribe('OPERAND_INPUT', this.reduce.bind(this));
+    this.dispatcher.subscribe('OPERATOR_INPUT', this.reduce.bind(this));
+    this.dispatcher.subscribe('DISPLAY_RESULT', this.reduce.bind(this));
+    this.dispatcher.subscribe('EVALUATE', this.reduce.bind(this));
   }
 
   reduce(action, value) {
@@ -58,14 +69,12 @@ class CalculatorStore {
     this.operator = operator;
   }
 
-  registerView(viewInstance) {
-    this.view.push(viewInstance);
-  }
+  // registerView(viewInstance) {
+  //   this.view.push(viewInstance);
+  // }
 
   displayResult(value) {
-    for (let view of this.view) {
-      view.render('UPDATE_VIEW', value);
-    }
+    this.view.render('UPDATE_VIEW', value);
   }
 
   evaluate() {

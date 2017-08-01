@@ -1,58 +1,39 @@
 'use strict';
 
-const Dispatcher = require('./index');
+import Dispatcher from './index';
 
-describe('Dispatcher', () => {
-  beforeEach(() => {
-    this.instance = Dispatcher;
+describe.only('Dispatcher', () => {
+  test('is a singleton', () => {
+    const instanceA = Dispatcher.getInstance();
+    const instanceB = Dispatcher.getInstance();
+    expect(instanceA.getSeed()).toBe(instanceB.getSeed());
   });
 
-  // from view
-  xdescribe('#receiveViewAction', () => {
-    it('is a function', () => {
-      expect(typeof this.instance.receiveViewAction).toBe('function');
+  describe('#subscribe', () => {
+    it('can register handler to actionType', () => {
+      expect(1).toBe(1);
     });
 
-    it('consumes click and keyup event from DOM', () => {
-
+    it('can register different handlers to same actionType', () => {
+      expect(1).toBe(1);
     });
 
-    it('keeps mouth shut when event is not click or keyup');
-
-    it('calls dispatchAction for valid click event');
-
-    it('calls dispatchAction for valid keyup event');
-
+    it('can register different handlers to different actionTypes', () => {
+      expect(1).toBe(1);
+    })
   });
 
-  // to model
-  xdescribe('#dispatchAction', () => {
-    it('is a function', () => {
-      expect(typeof this.instance.dispatchAction).toBe('function');
+  describe('#dispatch', () => {
+    test('warns if actionType hasnt been registered', () => {
+      expect(1).toBe(1);
     });
 
-    it('calls Calculator.receiveOperand when ?');
-
-    it('calls Calculator.receiveOperator when ?');
-  });
-
-  // from model
-  xdescribe('#receiveModelAction', () => {
-    it('is a function', () => {
-      expect(typeof this.instance.receiveModelAction).toBe('function');
+    test('warns if actionType doesnt have handler', () => {
+      expect(1).toBe(1);
     });
 
-    it('consumes an object that contains view element id/class and next state');
-  });
-
-  // to view
-  xdescribe('#updateView', () => {
-    it('is a function', () => {
-      expect(typeof this.instance.updateView).toBe('function');
+    test('calls all registered handlers with action and value', () => {
+      expect(1).toBe(1);
     });
-
-    it('manipulates DOM');
-
-    it('updates DOM elements with right state');
   });
 });

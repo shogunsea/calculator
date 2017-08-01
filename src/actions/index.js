@@ -1,25 +1,25 @@
 'use strict';
 
 import ActionTypes from './action_types';
-// Importing dispatcher here will create new instance of  dispatcher class
-// wihch iniailizes all the store instances as well.
 import Dispatcher from '../dispatcher';
+
+const dispatcher = Dispatcher.getInstance();
 
 const Actions = {
   operandInput(value) {
-    Dispatcher.dispatch({
+    dispatcher.dispatch({
       type: ActionTypes.OPERAND_INPUT,
       value: value
     })
   },
   operatorInput(value) {
-    Dispatcher.dispatch({
+    dispatcher.dispatch({
       type: ActionTypes.OPERATOR_INPUT,
       value: value
     })
   },
   evaluate()  {
-    Dispatcher.dispatch({
+    dispatcher.dispatch({
       type: ActionTypes.EVALUATE
     })
   },

@@ -1,8 +1,5 @@
 'use strict';
 
-// import all stores here
-// why use .default here? https://github.com/webpack/webpack/issues/706
-const calculatorStore = require('../stores/calculator_store').default;
 /**
  * The core dispatcher, essentially an EventEmitter
  * Spec:
@@ -19,18 +16,10 @@ class Dispatcher {
   constructor() {
     // register call backs
     this.subscribers = {}; // TODO: use ES6 MAP
-    this.initSubscription();
+    // this.initSubscription();
+    this.seed = Math.random();
   }
 
-  // TODO: add 2nd stores to test out the unidirectional flow.
-  initSubscription() {
-    this.subscribe('OPERAND_INPUT', calculatorStore.reduce.bind(calculatorStore));
-    this.subscribe('OPERATOR_INPUT', calculatorStore.reduce.bind(calculatorStore));
-    this.subscribe('EVALUATE', calculatorStore.reduce.bind(calculatorStore));
-    this.subscribe('DISPLAY_RESULT', calculatorStore.reduce.bind(calculatorStore));
-  }
-
-  // addEventListener
   // handler here has been bound to its host object
   subscribe(actionType, handler) {
     if (this.subscribers[actionType] === undefined) {
@@ -51,6 +40,17 @@ class Dispatcher {
       handler(action, value);
     }
   }
+
+  getSeed() {
+    // same instance should have same seed value
+    return this.seed;
+  }
 }
 
-export default new Dispatcher();
+let instance = null;
+
+const getInstance = () => {
+  return instance === null? instance = new Dispatcher() : instance;
+}
+
+export default {getInstance};

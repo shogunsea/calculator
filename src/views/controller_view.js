@@ -15,7 +15,6 @@
 class ControlelrView {
   constructor() {
     this.resultContainer = window.document.querySelector('.display .result');
-    // CalculatorStore.register(this);
   }
 
   render(action, value) {
@@ -28,4 +27,6 @@ class ControlelrView {
 }
 
 // Is singleton necessary here? will brand new instance everytime work the same?
+// Yes and no: JS require is cached. so the return value will be the same
+// but it is not singleton
 export default new ControlelrView();

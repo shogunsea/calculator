@@ -1,6 +1,11 @@
 'use strict';
 
 import Actions from '../actions';
+// Hook up controller view with main view here?
+// controllerView emit a change to broadcast to mainview?
+// right now this is just for initilization
+// import ControllerView from './controller_view';
+
 /**
  * The main app view
  * Spec:
