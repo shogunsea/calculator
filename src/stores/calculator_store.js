@@ -21,8 +21,8 @@ class CalculatorStore {
   constructor() {
     this.dispatcher = Dispatcher.getInstance();
     this.view = ControllerView; // one to one coupling? How many views should one store talk to?
-    this.valA = 0;
-    this.valB = 0;
+    this.currentValue = 0;
+    this.lastValue = 0;
     this.result = 0;
     this.input = 0;
     this.operator = '';
@@ -57,34 +57,53 @@ class CalculatorStore {
     }
   }
 
-  add(valA, valB) {
-    return valA + valB;
+  add() {
+    this.currentValue = this.currentValue + this.lastValue;
+    this.displayResult(this.currentValue);
   }
 
   receiveOperand(value) {
     const intValue = +value;
+
     if (this.lastOperation === 'operand' || this.lastOperation === '') {
-      this.valA = (this.valA * 10 + intValue);
+      this.currentValue = (this.currentValue * 10 + intValue);
     } else {
-      this.valA = intValue;
+      this.currentValue = intValue;
     }
 
     this.lastOperation = 'operand';
-    this.displayResult(this.valA);
+    this.displayResult(this.currentValue);
   }
 
   receiveOperator(operator) {
     this.lastOperation = 'operator';
+    this.lastValue = this.currentValue;
+    this.currentValue = 0;
     this.operator = operator;
   }
 
   displayResult(value) {
-    this.view.render('UPDATE_VIEW', value);
+    const formattedValue = new Intl.NumberFormat().format(value);
+    this.view.render('UPDATE_VIEW', formattedValue);
   }
 
   evaluate() {
-    // call this.displayResult after evluation?
-    this.displayResult(this.result);
+    switch (this.operator) {
+      case 'plus':
+        this.add();
+        break;
+      case 'minus':
+        this.minus();
+        break;
+      case 'multiply':
+        this.multiply();
+        break;
+      case 'divide':
+        this.divide();
+        break;
+      default:
+        break;
+    }
   }
 }
 

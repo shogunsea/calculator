@@ -4,7 +4,7 @@
 
 body {
   font-size: 1em;
-  font-family: 'Raleway', sans-serif;
+  font-family: Quicksand, Arial, sans-serif;
   margin: 0;
 }
 
@@ -56,15 +56,21 @@ body {
   }
 }
 
-.result {
+.result_container {
   color: #fff;
   font-size: 4em;
   font-weight: 100;
-  padding-top: 1.5em;
-  float: right;
-  position: absolute;
-  right: 0.7em;
-  bottom: 0.3em;
+  height: 100%;
+  text-align: right;
+  position: relative;
+
+  & .result {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding-bottom: 12px;
+    padding-right: 41px;
+  }
 }
 
 .operator_panel {
@@ -76,6 +82,10 @@ body {
   border-radius: 0 0 14px 0;
 
   & .button:active {
+    background: #b57732;
+  }
+
+  & .button:focus {
     background: #b57732;
   }
 }

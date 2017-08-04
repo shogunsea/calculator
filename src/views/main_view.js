@@ -33,6 +33,8 @@ export default class MainView {
     switch(type) {
       case 'OPERAND_INPUT' :
         return Actions.operandInput(value);
+      case 'OPERATOR_INPUT' :
+        return Actions.operatorInput(value);
       case 'EVALUATE':
         return Actions.evaluate();
       default:
@@ -42,12 +44,15 @@ export default class MainView {
 
   init() {
     this.elems.forEach((element) => {
+      const isEvaluate = element.classList.contains('evaluate');
       const isOperand = element.classList.contains('operand');
       const isOperator = element.classList.contains('operator');
       const value = element.dataset.value;
 
       element.addEventListener('click', (e) => {
-        if (isOperand) {
+        if (isEvaluate) {
+          this.createAction('EVALUATE', value);
+        } else if (isOperand) {
           this.createAction('OPERAND_INPUT', value);
         } else if (isOperator) {
           this.createAction('OPERATOR_INPUT', value);

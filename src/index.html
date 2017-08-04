@@ -3,14 +3,16 @@
 <head>
   <title>Calculator widget</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Raleway:100,400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
   <div class="container">
     <div id="calculator">
       <div class="display">
-        <div class="result">0</div>
+        <div class="result_container">
+          <div class="result">0</div>
+        </div>
       </div>
       <div class="main-panel">
         <div class="operand_panel">
@@ -40,11 +42,11 @@
           </div>
         </div>
         <div class="operator_panel">
-          <div class="operator button" data-value="divide" id="button_divide">÷</div>
-          <div class="operator button" data-value="multiply" id="button_multiply">×</div>
-          <div class="operator button" data-value="minus" id="button_minus">-</div>
-          <div class="operator button" data-value="plus" id="button_plus">+</div>
-          <div class="operator button" data-value="evaluate" id="button_evaluate">=</div>
+          <div tabindex="0" class="operator button" data-value="divide" id="button_divide">÷</div>
+          <div tabindex="0" class="operator button" data-value="multiply" id="button_multiply">×</div>
+          <div tabindex="0" class="operator button" data-value="minus" id="button_minus">-</div>
+          <div tabindex="0" class="operator button" data-value="plus" id="button_plus">+</div>
+          <div class="operator button evaluate" data-value="evaluate" id="button_evaluate">=</div>
         </div>
       </div>
     </div>
