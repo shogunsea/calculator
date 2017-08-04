@@ -26,6 +26,7 @@ class CalculatorStore {
     this.result = 0;
     this.input = 0;
     this.operator = '';
+    this.lastOperation = '';
 
     this.registerToDispatcher();
   }
@@ -61,17 +62,21 @@ class CalculatorStore {
   }
 
   receiveOperand(value) {
-    this.valA = value;
-    this.displayResult(value);
+    const intValue = +value;
+    if (this.lastOperation === 'operand' || this.lastOperation === '') {
+      this.valA = (this.valA * 10 + intValue);
+    } else {
+      this.valA = intValue;
+    }
+
+    this.lastOperation = 'operand';
+    this.displayResult(this.valA);
   }
 
   receiveOperator(operator) {
+    this.lastOperation = 'operator';
     this.operator = operator;
   }
-
-  // registerView(viewInstance) {
-  //   this.view.push(viewInstance);
-  // }
 
   displayResult(value) {
     this.view.render('UPDATE_VIEW', value);
