@@ -1,6 +1,6 @@
 {
   "name": "one-calculator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Plain calculator mirco app in HTML/CSS/JS.",
   "main": "index.js",
   "scripts": {
@@ -19,9 +19,12 @@
   },
   "jest": {
     "collectCoverage": true,
-    "collectCoverageFrom" : ["src/**/*.js"]
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.2",
     "babel-core": "^6.25.0",
     "babel-jest": "^20.0.3",
     "babel-loader": "^7.1.1",
@@ -48,5 +51,7 @@
     "gulp-rename": "^1.2.2",
     "nodemon": "^1.11.0"
   },
-  "files": ["public"]
+  "files": [
+    "public"
+  ]
 }
