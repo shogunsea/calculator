@@ -4,6 +4,7 @@ const gulp = require('gulp');
 const rename = require('gulp-rename');
 const del = require('del');
 const runSequence = require('run-sequence');
+const {execSync} = require('child_process');
 
 const htmlPathPattern = './src/*.html';
 const publicPath = './public';
@@ -23,9 +24,14 @@ gulp.task('assets:html', 'Copy html to public folder', function() {
     .pipe(gulp.dest('./public'));
 });
 
+gulp.task('assets:scss', 'Compile sass into css via webpack', function() {
+  execSync('webpack');
+});
+
 gulp.task('assets', function() {
   return runSequence(
     'assets:clean',
+    'assets:scss',
     'assets:html',
     function(error) {
       if (error) {
