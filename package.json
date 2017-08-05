@@ -1,15 +1,22 @@
 {
   "name": "one-calculator",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.2",
+  "description": "Plain calculator mirco app in HTML/CSS/JS.",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "hmr": "webpack-dev-server --inline --hot"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Shogunsea",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shogunsea/calculator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shogunsea/calculator/issues"
+  },
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom" : ["src/**/*.js"]
