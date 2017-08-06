@@ -88,8 +88,23 @@ class CalculatorStore {
   }
 
   add() {
-    this.currentValue = this.currentValue + this.lastValue;
-    this.displayResult(this.currentValue);
+    this.currentValue = this.lastValue + this.currentValue;
+    this.displayResult();
+  }
+
+  minus() {
+    this.currentValue = this.lastValue - this.currentValue;
+    this.displayResult();
+  }
+
+  multiply() {
+    this.currentValue = this.lastValue * this.currentValue;
+    this.displayResult();
+  }
+
+  divide() {
+    this.currentValue = this.lastValue / this.currentValue;
+    this.displayResult();
   }
 
   receiveOperand(value) {
@@ -135,7 +150,9 @@ class CalculatorStore {
       default:
         break;
     }
+    this.displayResult();
   }
+
 }
 
 export default new CalculatorStore();
