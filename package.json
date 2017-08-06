@@ -46,12 +46,14 @@
   },
   "dependencies": {
     "chalk": "^2.0.1",
+    "chromedriver": "^2.31.0",
     "express": "^4.15.3",
     "gulp": "^3.9.1",
     "gulp-help": "^1.6.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "webdriverio": "^4.8.0"
   },
   "files": [
     "public"
