@@ -25,8 +25,8 @@ class CalculatorStore {
     this.lastValue = 0;
     this.result = 0;
     this.input = 0;
-    this.operator = '';
-    this.lastOperation = '';
+    this.currentOperator = '';
+    this.lastInputType = '';
 
     this.registerToDispatcher();
   }
@@ -65,7 +65,7 @@ class CalculatorStore {
   clear() {
     this.currentValue = 0;
     this.lastValue = 0;
-    this.lastOperation = '';
+    this.lastInputType = '';
   }
 
   switchSign() {
@@ -110,21 +110,21 @@ class CalculatorStore {
   receiveOperand(value) {
     const intValue = +value;
 
-    if (this.lastOperation === 'operand' || this.lastOperation === '') {
+    if (this.lastInputType === 'operand' || this.lastInputType === '') {
       this.currentValue = (this.currentValue * 10 + intValue);
     } else {
       this.currentValue = intValue;
     }
 
-    this.lastOperation = 'operand';
+    this.lastInputType = 'operand';
     this.displayResult();
   }
 
   receiveOperator(operator) {
-    this.lastOperation = 'operator';
+    this.lastInputType = 'operator';
     this.lastValue = this.currentValue;
     this.currentValue = 0;
-    this.operator = operator;
+    this.currentOperator = operator;
   }
 
   displayResult() {
@@ -134,7 +134,16 @@ class CalculatorStore {
   }
 
   evaluate() {
-    switch (this.operator) {
+    // continous evaluation: second operand awalys used as lastValue
+    if (this.lastInputType === 'operand') {
+      const buffer = this.currentValue;
+      this.currentValue = this.lastValue;
+      this.lastValue = buffer;
+    }
+
+    this.lastInputType = 'operator';
+
+    switch (this.currentOperator) {
       case 'plus':
         this.add();
         break;

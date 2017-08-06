@@ -18,9 +18,10 @@ const Actions = {
       value: value,
     })
   },
-  evaluate()  {
+  evaluate(value)  {
     dispatcher.dispatch({
       type: ActionTypes.EVALUATE,
+      value: value,
     })
   },
   modify(value)  {

@@ -36,7 +36,7 @@ export default class MainView {
       case 'OPERATOR_INPUT' :
         return Actions.operatorInput(value);
       case 'EVALUATE':
-        return Actions.evaluate();
+        return Actions.evaluate(value);
       case 'MODIFY':
         return Actions.modify(value);
       default:

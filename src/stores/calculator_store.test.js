@@ -17,8 +17,8 @@ describe('Calculator store', () => {
       expect(CalculatorStore.result).toBe(0);
     });
 
-    test('contains one operator, initially set to empty string', () => {
-      expect(CalculatorStore.operator).toBe('');
+    test('contains currentOperator, initially set to empty string', () => {
+      expect(CalculatorStore.currentOperator).toBe('');
     });
   });
 
