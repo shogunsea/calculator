@@ -2,7 +2,7 @@
 
 import Dispatcher from './index';
 
-describe.only('Dispatcher', () => {
+describe('Dispatcher', () => {
   test('is a singleton', () => {
     const instanceA = Dispatcher.getInstance();
     const instanceB = Dispatcher.getInstance();

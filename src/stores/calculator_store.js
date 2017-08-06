@@ -36,6 +36,7 @@ class CalculatorStore {
     this.dispatcher.subscribe('OPERATOR_INPUT', this.reduce.bind(this));
     this.dispatcher.subscribe('DISPLAY_RESULT', this.reduce.bind(this));
     this.dispatcher.subscribe('EVALUATE', this.reduce.bind(this));
+    this.dispatcher.subscribe('MODIFY', this.reduce.bind(this));
   }
 
   reduce(action, value) {
@@ -52,9 +53,38 @@ class CalculatorStore {
       case ActionTypes.DISPLAY_RESULT:
         this.displayResult();
         break;
+      case ActionTypes.MODIFY:
+        this.modifyResult(value);
+        break;
       default:
         break;
     }
+  }
+
+  // reset
+  clear() {
+    this.currentValue = 0;
+    this.lastValue = 0;
+    this.lastOperation = '';
+  }
+
+  switchSign() {
+    this.currentValue = -this.currentValue;
+  }
+
+  percent() {
+    this.currentValue = 0.01 * this.currentValue;
+  }
+
+  modifyResult(value) {
+    if (value === 'clear') {
+      this.clear();
+    } else if (value === 'sign') {
+      this.switchSign();
+    } else if (value === 'percent') {
+      this.percent();
+    }
+    this.displayResult();
   }
 
   add() {
@@ -72,7 +102,7 @@ class CalculatorStore {
     }
 
     this.lastOperation = 'operand';
-    this.displayResult(this.currentValue);
+    this.displayResult();
   }
 
   receiveOperator(operator) {
@@ -82,8 +112,9 @@ class CalculatorStore {
     this.operator = operator;
   }
 
-  displayResult(value) {
-    const formattedValue = new Intl.NumberFormat().format(value);
+  displayResult() {
+    const value = this.currentValue;
+    const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
     this.view.render('UPDATE_VIEW', formattedValue);
   }
 

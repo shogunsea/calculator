@@ -37,6 +37,8 @@ export default class MainView {
         return Actions.operatorInput(value);
       case 'EVALUATE':
         return Actions.evaluate();
+      case 'MODIFY':
+        return Actions.modify(value);
       default:
        return;
     }
@@ -44,13 +46,16 @@ export default class MainView {
 
   init() {
     this.elems.forEach((element) => {
+      const isModifier = element.classList.contains('modify');
       const isEvaluate = element.classList.contains('evaluate');
       const isOperand = element.classList.contains('operand');
       const isOperator = element.classList.contains('operator');
       const value = element.dataset.value;
 
       element.addEventListener('click', (e) => {
-        if (isEvaluate) {
+        if (isModifier) {
+          this.createAction('MODIFY', value);
+        } else if (isEvaluate) {
           this.createAction('EVALUATE', value);
         } else if (isOperand) {
           this.createAction('OPERAND_INPUT', value);

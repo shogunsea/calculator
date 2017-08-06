@@ -1,74 +1,70 @@
 'use strict';
 
-const Calculator = require('./calculator_store');
+import CalculatorStore from './calculator_store';
 
-describe.skip('Calculator store', () => {
-  beforeEach(() => {
-    this.instance = Calculator;
-  });
-
+describe('Calculator store', () => {
   describe('instance attributes', () => {
     test('contains one current input with value 0', () => {
-        expect(this.instance.input).toBe(0);
+        expect(CalculatorStore.input).toBe(0);
     });
 
     test('contains two operands with value 0', () => {
-      expect(this.instance.valA).toBe(0);
-      expect(this.instance.valB).toBe(0);
+      expect(CalculatorStore.currentValue).toBe(0);
+      expect(CalculatorStore.lastValue).toBe(0);
     });
 
     test('contains one result with value 0', () => {
-      expect(this.instance.result).toBe(0);
+      expect(CalculatorStore.result).toBe(0);
     });
 
     test('contains one operator, initially set to empty string', () => {
-      expect(this.instance.operator).toBe('');
+      expect(CalculatorStore.operator).toBe('');
     });
   });
 
-  describe('#receiveOperand', () => {
+  xdescribe('#receiveOperand', () => {
     describe('when receiving first input', () => {
-      it('first operand will be assied with the input value', () => {
-        this.instance.receiveOperand(3);
-        expect(this.instance.valA).toBe(3);
+      test('first operand will be assied with the input value', () => {
+        CalculatorStore.receiveOperand(3);
+        expect(CalculatorStore.valA).toBe(3);
       });
 
-      it('second operand will remain value 0', () => {
-        this.instance.receiveOperand(3);
-        expect(this.instance.valB).toBe(0);
+      test('second operand will remain value 0', () => {
+        CalculatorStore.receiveOperand(3);
+        expect(CalculatorStore.valB).toBe(0);
       });
 
     });
   });
 
-  describe('#receiveOperator', () => {
-    it('sets the current operator');
-    it('calls #receiveOperand with current input value');
+  xdescribe('#receiveOperator', () => {
+    test('sets the current operator');
+    test('calls #receiveOperand with current input value');
     // subtle implication: previous input stays on the display panel
     // new input will starts from 0
-    it('sets current input to 0');
+    test('sets current input to 0');
 
     describe('when only first operand has value', () => {
-      it('does not call #evaluate');
+      test('does not call #evaluate');
     });
 
     describe('when both operands have value', () => {
-      it('calls #evaluate');
+      test('calls #evaluate');
     });
 
   });
 
-  describe('#add', () => {
+  xdescribe('#add', () => {
     test('adds 1 + 2 to equal 3', () => {
       expect(Calculator.prototype.add(1, 2)).toBe(3);
     });
 
-    it('sets the sum of operandA and operandB to result');
+    test('sets the sum of operandA and operandB to result');
 
-    it('sets the result to operandA');
+    test('sets the result to operandA');
 
-    it('sets operandB to 0');
+    test('sets operandB to 0');
 
-    it('calls #displayResult method');
+    test('calls #displayResult method');
   });
 });

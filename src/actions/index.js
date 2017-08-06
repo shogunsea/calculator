@@ -9,18 +9,24 @@ const Actions = {
   operandInput(value) {
     dispatcher.dispatch({
       type: ActionTypes.OPERAND_INPUT,
-      value: value
+      value: value,
     })
   },
   operatorInput(value) {
     dispatcher.dispatch({
       type: ActionTypes.OPERATOR_INPUT,
-      value: value
+      value: value,
     })
   },
   evaluate()  {
     dispatcher.dispatch({
-      type: ActionTypes.EVALUATE
+      type: ActionTypes.EVALUATE,
+    })
+  },
+  modify(value)  {
+    dispatcher.dispatch({
+      type: ActionTypes.MODIFY,
+      value: value,
     })
   },
 };
