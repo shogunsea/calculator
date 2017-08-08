@@ -1,7 +1,8 @@
-const webdriverio = require('webdriverio');
-const chromedriver = require('chromedriver');
+'use strict';
 
-const addition = require('./addition').default;
+import {remote} from 'webdriverio';
+import chromedriver from 'chromedriver';
+import addition from './addition';
 
 const PATH_TO_CANARY = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary';
 const PATH_TO_CHROME = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome';
@@ -15,63 +16,34 @@ chromedriver.start([
 ]);
 
 const test = async () => {
-
-const opts = {
-  port: PORT,
-  desiredCapabilities: {
-    browserName: 'chrome',
-    chromeOptions: {
-      binary: PATH_TO_CHROME, // Screenshots require Chrome 60. Force Canary.
-      args: ['--headless']
+  const opts = {
+    port: PORT,
+    desiredCapabilities: {
+      browserName: 'chrome',
+      chromeOptions: {
+        binary: PATH_TO_CHROME,
+        args: ['--headless']
+      }
     }
-  }
+  };
+
+  const browser = remote(opts).init();
+  const url = 'http://localhost:3090';
+
+  await browser.url(url);
+
+  const additionResult = await addition(browser);
+
+  chromedriver.stop();
+  browser.end();
+
+  return additionResult;
 };
-
-const browser = webdriverio.remote(opts).init();
-const url = 'http://localhost:3090';
-
-await browser.url(url);
-
-console.log({addition});
-// const title = await browser.getTitle();
-// console.log(`Title: ${title}`);
-const additionResult = await addition(browser);
-
-// await browser.waitForText('#button_clear', 3000);
-// const value = await browser.getText('.result');
-// console.log(`Result : ${value}`); // outputs: some value
-
-// await browser.url('https://www.chromestatus.com/features');
-
-// const title = await browser.getTitle();
-// console.log(`Title: ${title}`);
-
-// await browser.waitForText('.num-features', 3000);
-// let numFeatures = await browser.getText('.num-features');
-// console.log(`Chrome has ${numFeatures} total features`);
-
-// await browser.setValue('input[type="search"]', 'CSS');
-// console.log('Filtering features...');
-// await browser.pause(1000);
-
-// numFeatures = await browser.getText('.num-features');
-// console.log(`Chrome has ${numFeatures} CSS features`);
-
-// const buffer = await browser.saveScreenshot('screenshot.png');
-// console.log('Saved screenshot...');
-
-chromedriver.stop();
-browser.end();
-
-return additionResult;
-
-};
-
-
 
 const run = async () => {
   const result = await test();
   return result;
 }
 
+// TODO: possible refactor
 export default {run};
