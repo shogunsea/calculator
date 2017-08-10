@@ -1,7 +1,5 @@
 'use strict';
 
-// store-like component: subscribe to events dispatcher emit
-
 import ActionTypes from '../actions/action_types';
 import ControllerView from '../views/controller_view';
 import Dispatcher from '../dispatcher';
@@ -61,7 +59,6 @@ class CalculatorStore {
     }
   }
 
-  // reset
   clear() {
     this.currentValue = 0;
     this.lastValue = 0;

@@ -5,7 +5,10 @@ import chromedriver from 'chromedriver';
 import addition from './addition';
 
 const PATH_TO_CANARY = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary';
-const PATH_TO_CHROME = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome';
+const isLocalDev = /darwin/.test(process.platform);
+const linuxPath = '/usr/bin/google-chrome';
+const macOSPath = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome';
+const PATH_TO_CHROME = isLocalDev? macOSPath : linuxPath;
 
 const PORT = 9515;
 
@@ -34,10 +37,18 @@ const test = async () => {
 
   const additionResult = await addition(browser);
 
+  if (!additionResult.pass) {
+    console.log('Addition tests did not pass.');
+    console.log('Failed test cases: ');
+    additionResult.testCases.forEach((testCase) => {
+      console.log({testCase});
+    })
+  }
+
   chromedriver.stop();
   browser.end();
 
-  return additionResult;
+  return additionResult.pass;
 };
 
 const run = async () => {

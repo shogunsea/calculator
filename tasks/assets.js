@@ -25,7 +25,7 @@ gulp.task('assets:html', 'Copy html to public folder', function() {
 });
 
 gulp.task('assets:scss', 'Compile sass into css via webpack', function() {
-  execSync('webpack');
+  execSync('./node_modules/.bin/webpack');
 });
 
 gulp.task('assets', function() {

@@ -17,6 +17,9 @@ app.get('/', function(req, res, next) {
   res.sendFile(indexPath);
 });
 
-app.listen(PORT, function() {
+
+const server = app.listen(PORT, function() {
   console.log(chalk.green('server listening at http://localhost:3090 ...'));
 });
+
+module.exports = server;
