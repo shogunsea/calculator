@@ -1,16 +1,34 @@
 'use strict';
 
+const {valueTransformer} = require('./helper');
+
 const testCases = [
+  // {
+  //   actions: [1, '+', '='],
+  //   result: '2',
+  // },
+  // {
+  //   actions: [1, '+', 3],
+  //   result: '3',
+  // },
+  // {
+  //   actions: [1, '+', 3, '-'],
+  //   result: '4',
+  // },
+  // {
+  //   actions: [1, '+', '=', '='],
+  //   result: '3',
+  // },
   {
-    actions: ['one', 'plus', 'two', 'evaluate'],
+    actions: [1, '+', 2, '='],
     result: '3',
   },
   {
-    actions: ['four', 'plus', 'seven', 'evaluate'],
+    actions: [4, '+', 7, '='],
     result: '11',
   },
   {
-    actions: ['five', 'plus', 'two', 'evaluate', 'evaluate'],
+    actions: [5, '+', 2, '=', '='],
     result: '9',
   }
 ];
@@ -25,8 +43,8 @@ const additionTest = async (browser) => {
     const {actions, result} = testCase;
 
     for (let action of actions) {
-      await browser.click(`#button_${action}`);
-      browser.pause(3000);
+      const buttonID = `#button_${valueTransformer(action)}`;
+      await browser.click(buttonID);
     }
 
     const newValue = await browser.getText('.result');
