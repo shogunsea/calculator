@@ -15,6 +15,7 @@ gulp.task('start', 'Start hot reload server via nodemon.', async function() {
 
   nodemon({
     script: './src/server.js',
+    args:['app-server'],
     watch: 'src',
     ext: 'js html scss',
     env: {'NODE_ENV': 'development'},
