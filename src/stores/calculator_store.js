@@ -26,10 +26,32 @@ class CalculatorStore {
     this.currentOperator = '';
     this.lastInputType = '';
 
-    this.registerToDispatcher();
+    this._registerToDispatcher();
   }
 
-  registerToDispatcher() {
+  reduce(action, value) {
+    switch (action) {
+      case ActionTypes.OPERAND_INPUT:
+        this._receiveOperand(value);
+        break;
+      case ActionTypes.OPERATOR_INPUT:
+        this._receiveOperator(value);
+        break;
+      case ActionTypes.EVALUATE:
+        this._evaluate();
+        break;
+      case ActionTypes.DISPLAY_RESULT:
+        this._displayResult();
+        break;
+      case ActionTypes.MODIFY:
+        this._modifyResult(value);
+        break;
+      default:
+        break;
+    }
+  }
+
+  _registerToDispatcher() {
     this.dispatcher.subscribe('OPERAND_INPUT', this.reduce.bind(this));
     this.dispatcher.subscribe('OPERATOR_INPUT', this.reduce.bind(this));
     this.dispatcher.subscribe('DISPLAY_RESULT', this.reduce.bind(this));
@@ -37,74 +59,53 @@ class CalculatorStore {
     this.dispatcher.subscribe('MODIFY', this.reduce.bind(this));
   }
 
-  reduce(action, value) {
-    switch (action) {
-      case ActionTypes.OPERAND_INPUT:
-        this.receiveOperand(value);
-        break;
-      case ActionTypes.OPERATOR_INPUT:
-        this.receiveOperator(value);
-        break;
-      case ActionTypes.EVALUATE:
-        this.evaluate();
-        break;
-      case ActionTypes.DISPLAY_RESULT:
-        this.displayResult();
-        break;
-      case ActionTypes.MODIFY:
-        this.modifyResult(value);
-        break;
-      default:
-        break;
-    }
-  }
 
-  clear() {
+  _clear() {
     this.currentValue = 0;
     this.lastValue = 0;
     this.lastInputType = '';
   }
 
-  switchSign() {
+  _switchSign() {
     this.currentValue = -this.currentValue;
   }
 
-  percent() {
+  _percent() {
     this.currentValue = 0.01 * this.currentValue;
   }
 
-  modifyResult(value) {
+  _modifyResult(value) {
     if (value === 'clear') {
-      this.clear();
+      this._clear();
     } else if (value === 'sign') {
-      this.switchSign();
+      this._switchSign();
     } else if (value === 'percent') {
-      this.percent();
+      this._percent();
     }
-    this.displayResult();
+    this._displayResult();
   }
 
-  add() {
+  _add() {
     this.currentValue = this.lastValue + this.currentValue;
-    this.displayResult();
+    this._displayResult();
   }
 
-  minus() {
+  _minus() {
     this.currentValue = this.lastValue - this.currentValue;
-    this.displayResult();
+    this._displayResult();
   }
 
-  multiply() {
+  _multiply() {
     this.currentValue = this.lastValue * this.currentValue;
-    this.displayResult();
+    this._displayResult();
   }
 
-  divide() {
+  _divide() {
     this.currentValue = this.lastValue / this.currentValue;
     this.displayResult();
   }
 
-  receiveOperand(value) {
+  _receiveOperand(value) {
     const intValue = +value;
 
     if (this.lastInputType === 'operand' || this.lastInputType === '') {
@@ -114,23 +115,27 @@ class CalculatorStore {
     }
 
     this.lastInputType = 'operand';
-    this.displayResult();
+    this._displayResult();
   }
 
-  receiveOperator(operator) {
+  _receiveOperator(operator) {
+    if (operator === '=') {
+      return this._evaluate();
+    }
+
     this.lastInputType = 'operator';
     this.lastValue = this.currentValue;
     this.currentValue = 0;
     this.currentOperator = operator;
   }
 
-  displayResult() {
+  _displayResult() {
     const value = this.currentValue;
     const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
     this.view.render('UPDATE_VIEW', formattedValue);
   }
 
-  evaluate() {
+  _evaluate() {
     // continous evaluation: second operand awalys used as lastValue
     if (this.lastInputType === 'operand') {
       const buffer = this.currentValue;
@@ -142,21 +147,21 @@ class CalculatorStore {
 
     switch (this.currentOperator) {
       case 'plus':
-        this.add();
+        this._add();
         break;
       case 'minus':
-        this.minus();
+        this._minus();
         break;
       case 'multiply':
-        this.multiply();
+        this._multiply();
         break;
       case 'divide':
-        this.divide();
+        this._divide();
         break;
       default:
         break;
     }
-    this.displayResult();
+    this._displayResult();
   }
 
 }

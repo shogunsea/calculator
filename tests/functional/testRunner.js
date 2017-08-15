@@ -15,7 +15,7 @@ const PORT = 9515;
 chromedriver.start([
   '--url-base=wd/hub',
   `--port=${PORT}`,
-  '--verbose'
+  '--verbose',
 ]);
 
 const test = async () => {

@@ -1,19 +1,7 @@
 'use strict';
 
-const testCases = [
-  {
-    actions: ['one', 'plus', 'two', 'evaluate'],
-    result: '3',
-  },
-  {
-    actions: ['four', 'plus', 'seven', 'evaluate'],
-    result: '11',
-  },
-  {
-    actions: ['five', 'plus', 'two', 'evaluate', 'evaluate'],
-    result: '9',
-  }
-];
+const {valueTransformer} = require('../helper');
+const testCases = require('../test_cases/addition');
 
 const additionTest = async (browser) => {
   const metaData = {
@@ -25,8 +13,8 @@ const additionTest = async (browser) => {
     const {actions, result} = testCase;
 
     for (let action of actions) {
-      await browser.click(`#button_${action}`);
-      browser.pause(3000);
+      const buttonID = `#button_${valueTransformer(action)}`;
+      await browser.click(buttonID);
     }
 
     const newValue = await browser.getText('.result');
