@@ -19,7 +19,10 @@ class ControlelrView {
 
   render(action, value) {
     if (action === 'UPDATE_VIEW') {
-      this.resultContainer.innerHTML = value;
+      // TODO: uncheck if this property exist when jest mocks are set up properly
+      if (this.resultContainer) {
+        this.resultContainer.innerHTML = value;
+      }
     } else {
       // placeholder
     }

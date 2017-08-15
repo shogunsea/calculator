@@ -1,6 +1,6 @@
 'use strict';
 
-import server from '../src/server'; // starts app server
+import server from '../../src/server'; // starts app server
 import TestRunner from './testRunner'; // wraps actual tests within headless chrome
 
 describe('Integration tests', () => {
