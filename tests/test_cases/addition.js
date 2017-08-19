@@ -20,14 +20,14 @@ const testCases = [
     actions: [1, '+', 2, '='],
     result: '3',
   },
-  // {
-  //   actions: [4, '+', 7, '='],
-  //   result: '11',
-  // },
-  // {
-  //   actions: [5, '+', 2, '=', '='],
-  //   result: '9',
-  // }
+  {
+    actions: [4, '+', 7, '='],
+    result: '11',
+  },
+  {
+    actions: [5, '+', 2, '=', '='],
+    result: '9',
+  }
 ];
 
 module.exports = testCases;

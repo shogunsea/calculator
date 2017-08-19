@@ -3,7 +3,7 @@
 const {valueTransformer} = require('../helper');
 const testCases = require('../test_cases/addition');
 
-const additionTest = async (browser) => {
+const additionTest = async (page) => {
   const metaData = {
     pass: true,
     testCases: []
@@ -14,13 +14,14 @@ const additionTest = async (browser) => {
 
     for (let action of actions) {
       const buttonID = `#button_${valueTransformer(action)}`;
-      await browser.click(buttonID);
+      await page.click(buttonID);
     }
 
-    const newValue = await browser.getText('.result');
-    testCase.receivedValue = newValue;
+    const resultElementHandle = await page.$('.result');
+    const textValue = await resultElementHandle.evaluate((e) => e.innerText);
+    testCase.receivedValue = textValue;
 
-    if (newValue !== result) {
+    if (textValue !== result) {
       metaData.pass = false;
       metaData.testCases.push(testCase);
     }

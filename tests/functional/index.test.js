@@ -1,7 +1,7 @@
 'use strict';
 
 import server from '../../src/server'; // starts app server
-import TestRunner from './testRunner'; // wraps actual tests within headless chrome
+import PuppeteerLauncher from './puppeteer_launcher'; // wraps actual tests within headless
 
 describe('Integration tests', () => {
   afterAll(() => {
@@ -10,7 +10,7 @@ describe('Integration tests', () => {
   });
 
   test('all pass', async () => {
-    const result = await TestRunner.run();
+    const result = await PuppeteerLauncher.run();
     expect(result).toBe(true);
   });
 })
