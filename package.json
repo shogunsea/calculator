@@ -4,7 +4,7 @@
   "description": "Plain calculator mirco app in HTML/CSS/JS.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest tests src",
     "hmr": "webpack-dev-server --inline --hot"
   },
   "keywords": [],
@@ -22,7 +22,8 @@
     "coverageDirectory": "tests/coverage",
     "collectCoverageFrom": [
       "src/*/*.js"
-    ]
+    ],
+    "silent": true
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

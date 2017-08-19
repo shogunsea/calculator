@@ -29,7 +29,7 @@ export default class MainView {
     });
   }
 
-  createAction(type, value = 0) {
+  _createAction(type, value = 0) {
     switch(type) {
       case 'OPERAND_INPUT' :
         return Actions.operandInput(value);
@@ -54,13 +54,13 @@ export default class MainView {
 
       element.addEventListener('click', (e) => {
         if (isModifier) {
-          this.createAction('MODIFY', value);
-        } else if (isEvaluate) {
-          this.createAction('EVALUATE', value);
+          this._createAction('MODIFY', value);
+        } else if (isEvaluate) { // evaluate type have precedence over operator type
+          this._createAction('EVALUATE', value);
         } else if (isOperand) {
-          this.createAction('OPERAND_INPUT', value);
+          this._createAction('OPERAND_INPUT', value);
         } else if (isOperator) {
-          this.createAction('OPERATOR_INPUT', value);
+          this._createAction('OPERATOR_INPUT', value);
         } else {
           console.warn('No Action detected.');
         }

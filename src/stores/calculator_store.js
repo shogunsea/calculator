@@ -19,13 +19,15 @@ class CalculatorStore {
   constructor() {
     this.dispatcher = Dispatcher.getInstance();
     this.view = ControllerView; // one to one coupling? How many views should one store talk to?
+    this.input = 0;
     this.currentValue = 0;
     this.lastValue = 0;
     this.result = 0;
-    this.input = 0;
     this.currentOperator = '';
     this.lastInputType = '';
+    // TODO: use stack to keep inner state?
 
+    // seperate this call into init method?
     this._registerToDispatcher();
   }
 
@@ -58,7 +60,6 @@ class CalculatorStore {
     this.dispatcher.subscribe('EVALUATE', this.reduce.bind(this));
     this.dispatcher.subscribe('MODIFY', this.reduce.bind(this));
   }
-
 
   _clear() {
     this.currentValue = 0;
@@ -119,10 +120,6 @@ class CalculatorStore {
   }
 
   _receiveOperator(operator) {
-    if (operator === '=') {
-      return this._evaluate();
-    }
-
     this.lastInputType = 'operator';
     this.lastValue = this.currentValue;
     this.currentValue = 0;
@@ -161,6 +158,7 @@ class CalculatorStore {
       default:
         break;
     }
+
     this._displayResult();
   }
 
