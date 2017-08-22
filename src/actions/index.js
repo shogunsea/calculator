@@ -8,25 +8,25 @@ const dispatcher = Dispatcher.getInstance();
 const Actions = {
   operandInput(value) {
     dispatcher.dispatch({
-      type: ActionTypes.OPERAND_INPUT,
+      action: ActionTypes.OPERAND_INPUT,
       value: value,
     })
   },
   operatorInput(value) {
     dispatcher.dispatch({
-      type: ActionTypes.OPERATOR_INPUT,
+      action: ActionTypes.OPERATOR_INPUT,
       value: value,
     })
   },
   evaluate(value)  {
     dispatcher.dispatch({
-      type: ActionTypes.EVALUATE,
+      action: ActionTypes.EVALUATE,
       value: value,
     })
   },
   modify(value)  {
     dispatcher.dispatch({
-      type: ActionTypes.MODIFY,
+      action: ActionTypes.MODIFY,
       value: value,
     })
   },

@@ -58,11 +58,11 @@ class CalculatorStore {
   }
 
   _registerToDispatcher() {
-    this.dispatcher.subscribe('OPERAND_INPUT', this.reduce.bind(this));
-    this.dispatcher.subscribe('OPERATOR_INPUT', this.reduce.bind(this));
-    this.dispatcher.subscribe('DISPLAY_RESULT', this.reduce.bind(this));
-    this.dispatcher.subscribe('EVALUATE', this.reduce.bind(this));
-    this.dispatcher.subscribe('MODIFY', this.reduce.bind(this));
+    this.dispatcher.register('OPERAND_INPUT', this.reduce.bind(this));
+    this.dispatcher.register('OPERATOR_INPUT', this.reduce.bind(this));
+    this.dispatcher.register('DISPLAY_RESULT', this.reduce.bind(this));
+    this.dispatcher.register('EVALUATE', this.reduce.bind(this));
+    this.dispatcher.register('MODIFY', this.reduce.bind(this));
   }
 
   _clear() {
