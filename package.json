@@ -23,7 +23,7 @@
     "collectCoverageFrom": [
       "src/*/*.js"
     ],
-    "silent": true
+    "silent": false
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -19,12 +19,12 @@ class CalculatorStore {
   constructor() {
     this.dispatcher = Dispatcher.getInstance();
     this.view = ControllerView; // one to one coupling? How many views should one store talk to?
-    this.input = 0;
-    this.currentValue = 0;
-    this.lastValue = 0;
+    this.currentValue = null;
+    this.lastValue = null;
     this.result = 0;
     this.currentOperator = '';
     this.lastInputType = '';
+
     // TODO: use stack to keep inner state?
 
     // seperate this call into init method?
@@ -32,6 +32,8 @@ class CalculatorStore {
   }
 
   reduce(action, value) {
+    this._logger({action, value});
+
     switch (action) {
       case ActionTypes.OPERAND_INPUT:
         this._receiveOperand(value);
@@ -51,6 +53,8 @@ class CalculatorStore {
       default:
         break;
     }
+
+    this._logger();
   }
 
   _registerToDispatcher() {
@@ -62,8 +66,8 @@ class CalculatorStore {
   }
 
   _clear() {
-    this.currentValue = 0;
-    this.lastValue = 0;
+    this.currentValue = null;
+    this.lastValue = null;
     this.lastInputType = '';
   }
 
@@ -87,12 +91,16 @@ class CalculatorStore {
   }
 
   _add() {
+    const buffer = this.currentValue;
     this.currentValue = this.lastValue + this.currentValue;
+    this.lastValue = buffer;
     this._displayResult();
   }
 
   _minus() {
+    const buffer = this.currentValue;
     this.currentValue = this.lastValue - this.currentValue;
+    this.lastValue = buffer;
     this._displayResult();
   }
 
@@ -106,12 +114,14 @@ class CalculatorStore {
     this.displayResult();
   }
 
+  // number only. how about dot?
   _receiveOperand(value) {
     const intValue = +value;
 
     if (this.lastInputType === 'operand' || this.lastInputType === '') {
       this.currentValue = (this.currentValue * 10 + intValue);
-    } else {
+    } else if (this.lastInputType === 'operator') {
+      this.lastValue = this.currentValue;
       this.currentValue = intValue;
     }
 
@@ -121,20 +131,13 @@ class CalculatorStore {
 
   _receiveOperator(operator) {
     this.lastInputType = 'operator';
-    this.lastValue = this.currentValue;
-    this.currentValue = 0;
     this.currentOperator = operator;
   }
 
-  _displayResult() {
-    const value = this.currentValue;
-    const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
-    this.view.render('UPDATE_VIEW', formattedValue);
-  }
-
   _evaluate() {
-    // continous evaluation: second operand awalys used as lastValue
-    if (this.lastInputType === 'operand') {
+    if (this.lastValue === null) { // test case: 1 + =
+      this.lastValue = this.currentValue;
+    } else if (this.lastInputType === 'operator') { // continous evaluation: second operand awalys used as lastValue
       const buffer = this.currentValue;
       this.currentValue = this.lastValue;
       this.lastValue = buffer;
@@ -162,6 +165,37 @@ class CalculatorStore {
     this._displayResult();
   }
 
+  _displayResult() {
+    const value = this.currentValue;
+    const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
+    this.view.render('UPDATE_VIEW', formattedValue);
+  }
+
+  _logger(data) {
+    const debugMode = window.location.href.match('debug');
+    if (!debugMode) {
+      return;
+    }
+
+    if (!data) {
+      // log current state
+      console.log('Current state: ');
+      const data = {
+        currentValue: this.currentValue,
+        lastValue: this.lastValue,
+        result: this.result,
+        currentOperator: this.currentOperator,
+        lastInputType: this.lastInputType,
+      };
+
+      console.log(JSON.stringify(data, null, 2));
+      console.log('');
+    } else {
+      console.log('Current action: ');
+      console.log(data);
+    }
+
+  }
 }
 
 export default new CalculatorStore();
