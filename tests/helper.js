@@ -24,8 +24,10 @@ const valueTransformer = (value) => {
     case '-':
       return 'minus';
     case '×':
+    case '*':
       return 'multiply';
     case '÷':
+    case '/':
       return 'divide';
     case '=':
       return 'evaluate';

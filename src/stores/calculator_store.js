@@ -105,13 +105,18 @@ class CalculatorStore {
   }
 
   _multiply() {
+    const buffer = this.currentValue;
     this.currentValue = this.lastValue * this.currentValue;
+    this.lastValue = buffer;
     this._displayResult();
   }
 
   _divide() {
+    const buffer = this.currentValue;
+    debugger
     this.currentValue = this.lastValue / this.currentValue;
-    this.displayResult();
+    this.lastValue = buffer;
+    this._displayResult();
   }
 
   // number only. how about dot?

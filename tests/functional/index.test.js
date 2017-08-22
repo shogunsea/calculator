@@ -4,6 +4,8 @@ import server from '../../src/server'; // starts app server
 import HeadlessChrome from './headless_chrome';
 import additionTests from '../test_cases/addition';
 import subtractionTests from '../test_cases/subtraction';
+import multiplicationTests from '../test_cases/multiplication';
+import divisionTests from '../test_cases/division';
 
 describe('Integration tests', () => {
   beforeAll(async () => {
@@ -33,5 +35,24 @@ describe('Integration tests', () => {
       })
     }
   });
+
+  describe('Multiplication', async () => {
+    for (let {actions, result} of multiplicationTests) {
+      test(`${actions} yeilds to ${result}`, async () => {
+        const actualResult = await HeadlessChrome.evaluate(actions);
+        expect(actualResult).toBe(result);
+      })
+    }
+  });
+
+  describe('Division', async () => {
+    for (let {actions, result} of divisionTests) {
+      test(`${actions} yeilds to ${result}`, async () => {
+        const actualResult = await HeadlessChrome.evaluate(actions);
+        expect(actualResult).toBe(result);
+      })
+    }
+  });
+
 })
 
