@@ -60,6 +60,7 @@ describe('Dispatcher', () => {
         warn: jest.fn(),
       }
     })
+
     test('warns if actionType has not been registered', () => {
       const dummyAction = {action: 'foo', value: 'bar'};
       instance.dispatch(dummyAction);
@@ -76,8 +77,34 @@ describe('Dispatcher', () => {
       expect(console.warn).toBeCalledWith(msg);
     });
 
-    xtest('calls all registered handlers with action and value', () => {
-      expect(1).toBe(1);
+    test('calls registered handler with action and value', () => {
+      const fooHandler = jest.fn();
+      instance.register('foo', fooHandler);
+      const dummyAction = {action: 'foo', value: 'bar2000'};
+      instance.dispatch(dummyAction);
+      expect(fooHandler).toBeCalledWith('foo', 'bar2000');
+    });
+
+    test('calls all registered handlers with action and value', () => {
+      const fooHandler = jest.fn();
+      const foo2Handler = jest.fn();
+      instance.register('foo', fooHandler);
+      instance.register('foo', foo2Handler);
+      const dummyAction = {action: 'foo', value: 'bar2000'};
+      instance.dispatch(dummyAction);
+      expect(fooHandler).toBeCalledWith('foo', 'bar2000');
+      expect(fooHandler).toBeCalledWith('foo', 'bar2000');
+    });
+
+    test('does not call a handler if its not registered for an action', () => {
+      const fooHandler = jest.fn();
+      const barhandler = jest.fn();
+      instance.register('foo', fooHandler);
+      instance.register('bar', barhandler);
+      const dummyAction = {action: 'foo', value: 'bar2000'};
+      instance.dispatch(dummyAction);
+      expect(fooHandler).toBeCalledWith('foo', 'bar2000');
+      expect(barhandler.mock.calls.length).toBe(0);
     });
   });
 });
