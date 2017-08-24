@@ -1,6 +1,6 @@
 {
   "name": "one-calculator",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Plain calculator mirco app in HTML/CSS/JS.",
   "main": "index.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",
+    "puppeteer": "^0.9.0",
     "webpack-dev-server": "^2.5.0"
   },
   "dependencies": {
@@ -55,7 +56,6 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
     "nodemon": "^1.11.0",
-    "puppeteer": "^0.9.0",
     "webdriverio": "^4.8.0"
   },
   "files": [
