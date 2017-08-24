@@ -6,6 +6,7 @@ import additionTests from '../test_cases/addition';
 import subtractionTests from '../test_cases/subtraction';
 import multiplicationTests from '../test_cases/multiplication';
 import divisionTests from '../test_cases/division';
+import mixedOperationTests from '../test_cases/mixed_operation';
 
 describe('Integration tests', () => {
   beforeAll(async () => {
@@ -47,6 +48,15 @@ describe('Integration tests', () => {
 
   describe('Division', async () => {
     for (let {actions, result} of divisionTests) {
+      test(`${actions} yeilds to ${result}`, async () => {
+        const actualResult = await HeadlessChrome.evaluate(actions);
+        expect(actualResult).toBe(result);
+      })
+    }
+  });
+
+  xdescribe('Mixed operation', async () => {
+    for (let {actions, result} of mixedOperationTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
