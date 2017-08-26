@@ -17,6 +17,18 @@ const testCases = [
     result: '3',
   },
   {
+    actions: [1, '+', 2, '+'],
+    result: '3',
+  },
+  {
+    actions: [1, '+', 2, '+', 4, '='],
+    result: '7',
+  },
+  {
+    actions: [1, '+', 2, '+', 4, '+'],
+    result: '7',
+  },
+  {
     actions: [4, '+', 7, '='],
     result: '11',
   },

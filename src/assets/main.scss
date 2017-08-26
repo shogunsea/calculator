@@ -62,6 +62,13 @@ body {
 
   #button_zero {
     border-bottom-left-radius: $button-radius;
+    flex-basis: 4px;
+    flex-grow: 2;
+  }
+
+  #button_dot {
+    flex-basis: 0;
+    flex-grow: 1;
   }
 }
 

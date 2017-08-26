@@ -24,7 +24,10 @@ class CalculatorStore {
     this.result = 0;
     this.currentOperator = '';
     this.lastInputType = '';
-
+    // TODO: these two are added to solve mixed operation
+    // refactor to use stack for value&operators
+    this.preLastValue = null;
+    this.preOperator = '';
     // TODO: use stack to keep inner state?
 
     // seperate this call into init method?
@@ -135,6 +138,16 @@ class CalculatorStore {
   }
 
   _receiveOperator(operator) {
+    // if operator is + or -, run calculation right away if possible
+    // if operator is * or /, hold the value and wait for next in put.
+    if (operator === 'plus' || operator === 'minus') {
+      if (this.lastValue != null) {
+        this._evaluate();
+      }
+    } else {
+
+    }
+
     this.lastInputType = 'operator';
     this.currentOperator = operator;
   }
