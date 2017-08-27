@@ -137,3 +137,30 @@ body {
 .val_dot {
   width: 49.5%;
 }
+
+@media (max-width: 800px) {
+  #calculator {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .display {
+    border-radius: 0;
+  }
+
+  .operand_panel {
+    border-radius: 0;
+
+    & #button_zero {
+      border-radius: 0;
+    }
+  }
+
+  .operator_panel {
+    border-radius: 0;
+
+    #button_evaluate {
+      border-radius: 0;
+    }
+  }
+}
