@@ -44,7 +44,16 @@ export default class MainView {
     }
   }
 
+  preventDoubleTapZoom() {
+    document.body.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.target.click();
+    });
+  }
+
   init() {
+
+
     this.elems.forEach((element) => {
       const isModifier = element.classList.contains('modify');
       const isEvaluate = element.classList.contains('evaluate');
@@ -66,5 +75,7 @@ export default class MainView {
         }
       });
     });
+
+    this.preventDoubleTapZoom();
   }
 }
