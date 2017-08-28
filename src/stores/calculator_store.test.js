@@ -15,17 +15,16 @@ describe('Calculator store', () => {
       expect(CalculatorStore.view).toBe(ControllerView);
     });
 
-    test('.currentValue and .lastValue to be null', () => {
-      expect(CalculatorStore.currentValue).toBe(null);
-      expect(CalculatorStore.lastValue).toBe(null);
+    test('.result to be null', () => {
+      expect(CalculatorStore.result).toBe(null);
     });
 
-    test('.result to be 0', () => {
-      expect(CalculatorStore.result).toBe(0);
+    test('.operands to be []', () => {
+      expect(CalculatorStore.operands).toEqual([]);
     });
 
-    test('.currentOperator to be empty', () => {
-      expect(CalculatorStore.currentOperator).toBe('');
+    test('.operators to be []', () => {
+      expect(CalculatorStore.operators).toEqual([]);
     });
 
     test('.lastInputType to be empty', () => {
