@@ -154,7 +154,7 @@ class CalculatorStore {
     this._displayResult(currentValue);
   }
 
-  _receiveOperator(operator) {
+  _receiveOperator(currentOperator) {
     // if operator is + or -, run calculation right away if possible
     // if operator is * or /, hold the value and wait for next in put.
     // if (operator === 'plus' || operator === 'minus') {
@@ -164,11 +164,20 @@ class CalculatorStore {
     // } else {
 
     // }
+    const lastOperator = this.operators[this.operators.length - 1];
 
-    this.operators.push(operator);
+    if (lastOperator === 'plus' || lastOperator === 'minus') {
+      if (currentOperator === 'plus' || currentOperator === 'minus') {
+        this._evaluate();
+        this.operators.pop();
+        this.operators.push(currentOperator);
+      }
+    } else {
+      this.operators.push(currentOperator);
+    }
 
     this.lastInputType = 'operator';
-    this.currentOperator = operator;
+    // this.currentOperator = operator;
   }
 
   _evaluate() {
@@ -179,10 +188,11 @@ class CalculatorStore {
 
     // !! new computation sign: after evaluation, there's a operand coming in.
     // you should call reset when that happens.
-
+    if (this.lastInputType === 'operand' && this.result != null) {
+      this.operands.shift();
+    }
     // console.log({operands: this.operands});
     // console.log({operators: this.operators});
-
     if (this.operands.length <= 1) { // test case: 4 + =
       rightOperand = this.operands[this.operands.length - 1]; // peek
       leftOperand = this.result == null? rightOperand : this.result;
@@ -191,7 +201,12 @@ class CalculatorStore {
       leftOperand = this.operands.pop();
     }
 
-    // this.operands.push(rightOperand); ?
+    if (this.operands.length === 0) { // always reserve rightOperand in case of
+      // continuous evaluation
+      this.operands.push(rightOperand);
+    }
+
+
 
     if (this.operators.length <= 1) {
       operator = this.operators[this.operators.length - 1]; // peek
@@ -207,12 +222,6 @@ class CalculatorStore {
     console.log({rightOperand});
 
 
-
-
-
-
-
-
     //     this.lastValue = this.currentValue;
     // } else if (this.lastInputType === 'operator') { // continous evaluation: second operand awalys used as lastValue
     //   const buffer = this.currentValue;
@@ -222,7 +231,7 @@ class CalculatorStore {
 
     this.lastInputType = 'operator';
 
-    switch (this.currentOperator) {
+    switch (operator) {
       case 'plus':
         this._add(leftOperand, rightOperand);
         break;
@@ -260,10 +269,10 @@ class CalculatorStore {
       const data = {
         // currentValue: this.currentValue,
         // lastValue: this.lastValue,
-        // result: this.result,
+        result: this.result,
         // currentOperator: this.currentOperator,
         operators: this.operators,
-        operans: this.operands,
+        operands: this.operands,
         lastInputType: this.lastInputType,
       };
 
