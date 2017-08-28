@@ -20,7 +20,7 @@ describe('Integration tests', () => {
   });
 
   describe('Addition', async () => {
-    for (let {actions, result} of additionTests) {
+  for (let {actions, result} of additionTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);

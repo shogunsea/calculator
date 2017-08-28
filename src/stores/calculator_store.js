@@ -18,17 +18,13 @@ class CalculatorStore {
   // Store should be initialized with dispatcher instance.
   constructor() {
     this.dispatcher = Dispatcher.getInstance();
-    this.view = ControllerView; // one to one coupling? How many views should one store talk to?
-    this.currentValue = null;
-    this.lastValue = null;
-    this.result = 0;
+    this.view = ControllerView;
+    this.result = null; // result should stay null before any computation takes place
     this.currentOperator = '';
     this.lastInputType = '';
-    // TODO: these two are added to solve mixed operation
-    // refactor to use stack for value&operators
-    this.preLastValue = null;
-    this.preOperator = '';
-    // TODO: use stack to keep inner state?
+    this.operands = [];
+    this.operators = [];
+
 
     // seperate this call into init method?
     this._registerToDispatcher();
@@ -69,9 +65,12 @@ class CalculatorStore {
   }
 
   _clear() {
-    this.currentValue = null;
-    this.lastValue = null;
+    this.result = null;
+    this.operands = [];
+    this.operators = [];
     this.lastInputType = '';
+    this._displayResult(0);
+    console.clear();
   }
 
   _switchSign() {
@@ -90,101 +89,117 @@ class CalculatorStore {
     } else if (value === 'percent') {
       this._percent();
     }
-    this._displayResult();
   }
 
-  _add() {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue + this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+  _add(leftOperand, rightOperand) {
+    const result = leftOperand + rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
-  _minus() {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue - this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+  _minus(leftOperand, rightOperand) {
+    const result = leftOperand - rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
-  _multiply() {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue * this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+  _multiply(leftOperand, rightOperand) {
+    const result = leftOperand * rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
-  _divide() {
-    const buffer = this.currentValue;
-    debugger
-    this.currentValue = this.lastValue / this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+  _divide(leftOperand, rightOperand) {
+    const result = leftOperand / rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
   // number only. how about dot?
   _receiveOperand(value) {
-    const intValue = +value;
+    // if last operation is 'evaluate' then reset.
 
-    if (this.lastInputType === 'operand' || this.lastInputType === '') {
-      this.currentValue = (this.currentValue * 10 + intValue);
+    let currentValue = +value;
+
+    if (this.lastInputType === 'operand' && this.operands.length > 0) {
+      const previousValue = this.operands.pop();
+      currentValue = (previousValue * 10 + currentValue);
     } else if (this.lastInputType === 'operator') {
-      this.lastValue = this.currentValue;
-      this.currentValue = intValue;
     }
 
+    this.operands.push(currentValue);
+
     this.lastInputType = 'operand';
-    this._displayResult();
+    this._displayResult(currentValue);
   }
 
-  _receiveOperator(operator) {
-    // if operator is + or -, run calculation right away if possible
-    // if operator is * or /, hold the value and wait for next in put.
-    if (operator === 'plus' || operator === 'minus') {
-      if (this.lastValue != null) {
-        this._evaluate();
-      }
-    } else {
+  _receiveOperator(currentOperator) {
+    const lastOperator = this.operators[this.operators.length - 1];
 
+    if ((lastOperator === 'plus' || lastOperator === 'minus') && (currentOperator === 'plus' || currentOperator === 'minus')) {
+        this._evaluate();
+        this.operators.pop();
+        this.operators.push(currentOperator);
+    } else {
+      this.operators.push(currentOperator);
     }
 
     this.lastInputType = 'operator';
-    this.currentOperator = operator;
+    // this.currentOperator = operator;
   }
 
   _evaluate() {
-    if (this.lastValue === null) { // test case: 1 + =
-      this.lastValue = this.currentValue;
-    } else if (this.lastInputType === 'operator') { // continous evaluation: second operand awalys used as lastValue
-      const buffer = this.currentValue;
-      this.currentValue = this.lastValue;
-      this.lastValue = buffer;
+    let leftOperand = 0;
+    let rightOperand = 0;
+    let operator = '';
+
+    // !! new computation sign: after evaluation, there's a operand coming in.
+    // you should call reset when that happens.
+    if (this.lastInputType === 'operand' && this.result != null) {
+      this.operands.shift(); // previous right operator was store; but if new value coming in and result is present, we don't need previous right operator
+    }
+
+    if (this.operands.length <= 1) { // test case: 4 + =
+      rightOperand = this.operands[this.operands.length - 1]; // peek
+      leftOperand = this.result == null? rightOperand : this.result;
+    } else {
+      rightOperand = this.operands.pop(); // pop
+      leftOperand = this.operands.pop();
+    }
+
+    if (this.operands.length === 0) { // always reserve rightOperand in case of
+      // continuous evaluation
+      this.operands.push(rightOperand);
+    }
+
+    if (this.operators.length <= 1) {
+      operator = this.operators[this.operators.length - 1]; // peek
+    } else {
+      operator = this.operators.pop(); // pop
     }
 
     this.lastInputType = 'operator';
 
-    switch (this.currentOperator) {
+    switch (operator) {
       case 'plus':
-        this._add();
+        this._add(leftOperand, rightOperand);
         break;
       case 'minus':
-        this._minus();
+        this._minus(leftOperand, rightOperand);
         break;
       case 'multiply':
-        this._multiply();
+        this._multiply(leftOperand, rightOperand);
         break;
       case 'divide':
-        this._divide();
+        this._divide(leftOperand, rightOperand);
         break;
       default:
         break;
     }
 
-    this._displayResult();
   }
 
-  _displayResult() {
-    const value = this.currentValue;
+  _displayResult(value) {
     const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
     this.view.render('UPDATE_VIEW', formattedValue);
   }
@@ -199,10 +214,9 @@ class CalculatorStore {
       // log current state
       console.log('Current state: ');
       const data = {
-        currentValue: this.currentValue,
-        lastValue: this.lastValue,
         result: this.result,
-        currentOperator: this.currentOperator,
+        operators: this.operators,
+        operands: this.operands,
         lastInputType: this.lastInputType,
       };
 
