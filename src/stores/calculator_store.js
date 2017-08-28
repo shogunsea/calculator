@@ -104,31 +104,25 @@ class CalculatorStore {
   _add(leftOperand, rightOperand) {
     const result = leftOperand + rightOperand;
     this.result = result;
-    // const buffer = this.currentValue;
-    // this.currentValue = this.lastValue + this.currentValue;
-    // this.lastValue = buffer;
     this._displayResult(result);
   }
 
   _minus(leftOperand, rightOperand) {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue - this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+    const result = leftOperand - rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
   _multiply(leftOperand, rightOperand) {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue * this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+    const result = leftOperand * rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
   _divide(leftOperand, rightOperand) {
-    const buffer = this.currentValue;
-    this.currentValue = this.lastValue / this.currentValue;
-    this.lastValue = buffer;
-    this._displayResult();
+    const result = leftOperand / rightOperand;
+    this.result = result;
+    this._displayResult(result);
   }
 
   // number only. how about dot?
@@ -181,7 +175,6 @@ class CalculatorStore {
   }
 
   _evaluate() {
-    // if (this.lastValue === null) { // test case: 1 + =
     let leftOperand = 0;
     let rightOperand = 0;
     let operator = '';
@@ -189,10 +182,9 @@ class CalculatorStore {
     // !! new computation sign: after evaluation, there's a operand coming in.
     // you should call reset when that happens.
     if (this.lastInputType === 'operand' && this.result != null) {
-      this.operands.shift();
+      this.operands.shift(); // previous right operator was store; but if new value coming in and result is present, we don't need previous right operator
     }
-    // console.log({operands: this.operands});
-    // console.log({operators: this.operators});
+
     if (this.operands.length <= 1) { // test case: 4 + =
       rightOperand = this.operands[this.operands.length - 1]; // peek
       leftOperand = this.result == null? rightOperand : this.result;
@@ -206,21 +198,11 @@ class CalculatorStore {
       this.operands.push(rightOperand);
     }
 
-
-
     if (this.operators.length <= 1) {
       operator = this.operators[this.operators.length - 1]; // peek
     } else {
       operator = this.operators.pop(); // pop
     }
-
-    // 1 + =
-    // 1 + 2 =
-    // 1 + 2 + 3 =
-    // you might need a 'result' varible to hold the data.
-    console.log({leftOperand});
-    console.log({rightOperand});
-
 
     //     this.lastValue = this.currentValue;
     // } else if (this.lastInputType === 'operator') { // continous evaluation: second operand awalys used as lastValue
