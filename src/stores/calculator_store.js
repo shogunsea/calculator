@@ -91,10 +91,14 @@ class CalculatorStore {
     }
   }
 
-  _add(leftOperand, rightOperand) {
+  _add(leftOperand, rightOperand, unsetResult) {
     const result = leftOperand + rightOperand;
-    this.result = result;
-    this._displayResult(result);
+    if (!unsetResult) {
+      this.result = result;
+      this._displayResult(result);
+    }
+
+    return result;
   }
 
   _minus(leftOperand, rightOperand) {
@@ -103,10 +107,13 @@ class CalculatorStore {
     this._displayResult(result);
   }
 
-  _multiply(leftOperand, rightOperand) {
+  _multiply(leftOperand, rightOperand, unsetResult) {
     const result = leftOperand * rightOperand;
-    this.result = result;
-    this._displayResult(result);
+    if (!unsetResult) {
+      this.result = result;
+      this._displayResult(result);
+    }
+    return result;
   }
 
   _divide(leftOperand, rightOperand) {
@@ -136,7 +143,7 @@ class CalculatorStore {
   _receiveOperator(currentOperator) {
     const lastOperator = this.operators[this.operators.length - 1];
 
-    if ((lastOperator === 'plus' || lastOperator === 'minus') && (currentOperator === 'plus' || currentOperator === 'minus')) {
+    if (currentOperator === 'plus' || currentOperator === 'minus') {
         this._evaluate();
         this.operators.pop();
         this.operators.push(currentOperator);
@@ -167,10 +174,17 @@ class CalculatorStore {
       leftOperand = this.operands.pop();
     }
 
+    const evaluateTwice = this.operators.length === 2;
+
     if (this.operands.length === 0) { // always reserve rightOperand in case of
       // continuous evaluation
       this.operands.push(rightOperand);
     }
+
+    // {
+    //   actions: [1, '+', 5, '*', 2, '='],
+    //   result: '11',
+    // },
 
     if (this.operators.length <= 1) {
       operator = this.operators[this.operators.length - 1]; // peek
@@ -180,23 +194,39 @@ class CalculatorStore {
 
     this.lastInputType = 'operator';
 
+    if (evaluateTwice) {
+      const tempResult = this._compute(leftOperand, rightOperand, operator, true);
+
+      console.log({tempResult});
+
+      const newRightOperand = tempResult;
+      const rightOperator = operator;
+      const leftMostOperand = this.operands.pop();
+      const newOperator = this.operators.pop();
+      this.operands.push(rightOperand);
+      this.operators.push(rightOperator);
+
+      this._compute(leftMostOperand, newRightOperand, newOperator);
+
+    } else {
+      this._compute(leftOperand, rightOperand, operator, )
+    }
+  }
+
+  _compute(leftOperand, rightOperand, operator, unsetResult) {
+    // const {unsetResult, evaluateTwice} = options;
     switch (operator) {
       case 'plus':
-        this._add(leftOperand, rightOperand);
-        break;
+        return this._add(leftOperand, rightOperand, unsetResult);
       case 'minus':
-        this._minus(leftOperand, rightOperand);
-        break;
+        return this._minus(leftOperand, rightOperand);
       case 'multiply':
-        this._multiply(leftOperand, rightOperand);
-        break;
+        return this._multiply(leftOperand, rightOperand);
       case 'divide':
-        this._divide(leftOperand, rightOperand);
-        break;
+        return this._divide(leftOperand, rightOperand);
       default:
-        break;
+        return 0;
     }
-
   }
 
   _displayResult(value) {

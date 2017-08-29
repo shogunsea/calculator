@@ -55,7 +55,7 @@ describe('Integration tests', () => {
     }
   });
 
-  xdescribe('Mixed operation', async () => {
+  describe('Mixed operation', async () => {
     for (let {actions, result} of mixedOperationTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);

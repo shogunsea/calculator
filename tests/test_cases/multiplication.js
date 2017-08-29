@@ -31,7 +31,19 @@ const testCases = [
   {
     actions: [5, '*', 2, '=', '='],
     result: '20',
-  }
+  },
+  {
+    actions: [5, '*', 2, '*', 3],
+    result: '3',
+  },
+  // {
+  //   actions: [5, '*', 2, '*', 3, '*'],
+  //   result: '30',
+  // },
+  {
+    actions: [5, '*', 2, '*', 3, '='],
+    result: '30',
+  },
 ];
 
 module.exports = testCases;
