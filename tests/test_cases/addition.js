@@ -35,7 +35,7 @@ const testCases = [
   {
     actions: [5, '+', 2, '=', '='],
     result: '9',
-  }
+  },
 ];
 
 module.exports = testCases;

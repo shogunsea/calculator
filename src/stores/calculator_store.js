@@ -3,6 +3,8 @@
 import ActionTypes from '../actions/action_types';
 import ControllerView from '../views/controller_view';
 import Dispatcher from '../dispatcher';
+import Stack from './stack';
+import {isPlusMinus, isMultiplyDivide} from './helper';
 
 /**
  *
@@ -22,8 +24,8 @@ class CalculatorStore {
     this.result = null; // result should stay null before any computation takes place
     this.currentOperator = '';
     this.lastInputType = '';
-    this.operands = [];
-    this.operators = [];
+    this.operands = new Stack();
+    this.operators = new Stack();
 
 
     // seperate this call into init method?
@@ -66,8 +68,8 @@ class CalculatorStore {
 
   _clear() {
     this.result = null;
-    this.operands = [];
-    this.operators = [];
+    this.operands = new Stack();
+    this.operators = new Stack();
     this.lastInputType = '';
     this._displayResult(0);
     console.clear();
@@ -123,15 +125,16 @@ class CalculatorStore {
   }
 
   // number only. how about dot?
+  // * Receiving operands should never trigger evaluation.
   _receiveOperand(value) {
     // if last operation is 'evaluate' then reset.
-
     let currentValue = +value;
 
-    if (this.lastInputType === 'operand' && this.operands.length > 0) {
+    if (this.lastInputType === 'operand' && this.operands.size() > 0) {
       const previousValue = this.operands.pop();
       currentValue = (previousValue * 10 + currentValue);
     } else if (this.lastInputType === 'operator') {
+      // const a = 1;
     }
 
     this.operands.push(currentValue);
@@ -140,16 +143,71 @@ class CalculatorStore {
     this._displayResult(currentValue);
   }
 
-  _receiveOperator(currentOperator) {
-    const lastOperator = this.operators[this.operators.length - 1];
 
-    if (currentOperator === 'plus' || currentOperator === 'minus') {
+  // *
+  _receiveOperator(currentOperator) {
+    const previousOperator = this.operators.peek();
+    const previousPlusMinus = isPlusMinus(previousOperator);
+    const previousMultiplyDivide = isMultiplyDivide(previousOperator);
+    const currentPlusMinus = isPlusMinus(currentOperator);
+    const currentMultiplyDivide = isMultiplyDivide(currentOperator);
+
+    // actions: [1, '+', 5, '*', 2, '='],
+    // result: '11',
+
+    if (previousPlusMinus) {
+      if (currentPlusMinus) {
+        // evaluate
         this._evaluate();
-        this.operators.pop();
-        this.operators.push(currentOperator);
-    } else {
-      this.operators.push(currentOperator);
+      } else if (currentMultiplyDivide) {
+        // no action: only store
+
+      }
+    } else if (previousMultiplyDivide) {
+      if (currentPlusMinus) {
+        // evaluate
+        this._evaluate();
+
+
+      } else if (currentMultiplyDivide) {
+        // evaluate
+        this._evaluate();
+
+      }
     }
+
+    this.operators.push(currentOperator);
+
+    // if (previousPlusMinus && currentPlusMinus) {
+    //   // evaluate
+    // } else if (previousMultiplyDivide && currentMultiplyDivide) {
+    //   // evaluate
+    // } else if (previousMultiplyDivide && currentPlusMinus && operatorsContainsPlusMinus) {
+    //   // evaluate up until +/- are consumed --- that should be all the
+    //   // operations left right?
+    // } else if (previousPlusMinus && currentMultiplyDivide) {
+    //   // no action: only store
+    // }
+
+    // if (isPlusMinus(previousOperator) && isPlusMinus(currentOperator)) {
+    //   // evaluate
+    // } else if (isMultiplyDivide(previousOperator) && isMultiplyDivide(currentOperator)) {
+    //   // evaluate
+    // } else if (isMultiplyDivide(previousOperator) && isPlusMinus(currentOperator) && ) {
+
+    // } else if (false) {
+    //   return;
+    // }
+
+
+    // ?
+    // if (currentOperator === 'plus' || currentOperator === 'minus') {
+    //   this._evaluate();
+    //   this.operators.pop();
+    //   this.operators.push(currentOperator);
+    // } else {
+    //   this.operators.push(currentOperator);
+    // }
 
     this.lastInputType = 'operator';
     // this.currentOperator = operator;
@@ -159,58 +217,61 @@ class CalculatorStore {
     let leftOperand = 0;
     let rightOperand = 0;
     let operator = '';
+    debugger
+    // Notes:
+    // 1. sign of a new round of computation: after evaluation, there's a operand coming in. e.g ... '='. '3'  you should call reset when that happens.
 
-    // !! new computation sign: after evaluation, there's a operand coming in.
-    // you should call reset when that happens.
+    //for continuous computation
+    // if rightOperandsHaveBeenReserved && newOperandComingIn
+    // then dequeue from operands
+
+    // previous right operator was store; but if new value coming in and result is present, we don't need previous right operator
     if (this.lastInputType === 'operand' && this.result != null) {
-      this.operands.shift(); // previous right operator was store; but if new value coming in and result is present, we don't need previous right operator
+      this.operands.shift();
     }
 
-    if (this.operands.length <= 1) { // test case: 4 + =
-      rightOperand = this.operands[this.operands.length - 1]; // peek
+    if (this.operands.size() === 1) { // test case: 4 + =
+      rightOperand = this.operands.peek(); // peek
       leftOperand = this.result == null? rightOperand : this.result;
     } else {
-      rightOperand = this.operands.pop(); // pop
+      rightOperand = this.operands.pop();
       leftOperand = this.operands.pop();
     }
 
-    const evaluateTwice = this.operators.length === 2;
-
-    if (this.operands.length === 0) { // always reserve rightOperand in case of
+    // 1 + 2 =
+    if (this.operands.isEmpty()) { // always reserve rightOperand in case of
       // continuous evaluation
       this.operands.push(rightOperand);
     }
 
-    // {
-    //   actions: [1, '+', 5, '*', 2, '='],
-    //   result: '11',
-    // },
-
-    if (this.operators.length <= 1) {
-      operator = this.operators[this.operators.length - 1]; // peek
+    if (this.operators.size() <= 1) {
+      operator = this.operators.peek(); // peek
     } else {
       operator = this.operators.pop(); // pop
     }
 
     this.lastInputType = 'operator';
 
-    if (evaluateTwice) {
-      const tempResult = this._compute(leftOperand, rightOperand, operator, true);
 
-      console.log({tempResult});
+    this._compute(leftOperand, rightOperand, operator);
 
-      const newRightOperand = tempResult;
-      const rightOperator = operator;
-      const leftMostOperand = this.operands.pop();
-      const newOperator = this.operators.pop();
-      this.operands.push(rightOperand);
-      this.operators.push(rightOperator);
+    // if (evaluateTwice) { // while stopConditionNotMet: loop
+    //   const tempResult = this._compute(leftOperand, rightOperand, operator, true);
 
-      this._compute(leftMostOperand, newRightOperand, newOperator);
+    //   // console.log({tempResult});
 
-    } else {
-      this._compute(leftOperand, rightOperand, operator, )
-    }
+    //   const newRightOperand = tempResult;
+    //   const rightOperator = operator;
+    //   const leftMostOperand = this.operands.pop();
+    //   const newOperator = this.operators.pop();
+    //   this.operands.push(rightOperand);
+    //   this.operators.push(rightOperator);
+
+    //   this._compute(leftMostOperand, newRightOperand, newOperator);
+
+    // } else {
+    //   this._compute(leftOperand, rightOperand, operator);
+    // }
   }
 
   _compute(leftOperand, rightOperand, operator, unsetResult) {
@@ -256,7 +317,6 @@ class CalculatorStore {
       console.log('Current action: ');
       console.log(data);
     }
-
   }
 }
 

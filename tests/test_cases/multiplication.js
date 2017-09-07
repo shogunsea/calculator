@@ -21,6 +21,10 @@ const testCases = [
     result: '3',
   },
   {
+    actions: [2, '*', 3, '*'],
+    result: '6',
+  },
+  {
     actions: [1, '*', 2, '='],
     result: '2',
   },
@@ -36,10 +40,10 @@ const testCases = [
     actions: [5, '*', 2, '*', 3],
     result: '3',
   },
-  // {
-  //   actions: [5, '*', 2, '*', 3, '*'],
-  //   result: '30',
-  // },
+  {
+    actions: [5, '*', 2, '*', 3, '*'],
+    result: '30',
+  },
   {
     actions: [5, '*', 2, '*', 3, '='],
     result: '30',

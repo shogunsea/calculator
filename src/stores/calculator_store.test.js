@@ -4,6 +4,7 @@ import CalculatorStore from './calculator_store';
 import Dispatcher from '../dispatcher';
 import ControllerView from '../views/controller_view';
 import ActionTypes from '../actions/action_types';
+import Stack from './stack';
 
 describe('Calculator store', () => {
   describe('instance attributes', () => {
@@ -19,12 +20,12 @@ describe('Calculator store', () => {
       expect(CalculatorStore.result).toBe(null);
     });
 
-    test('.operands to be []', () => {
-      expect(CalculatorStore.operands).toEqual([]);
+    test('.operands to be an instacne of Stack', () => {
+      expect(CalculatorStore.operands).toEqual(new Stack());
     });
 
-    test('.operators to be []', () => {
-      expect(CalculatorStore.operators).toEqual([]);
+    test('.operators to be an instacne of Stack', () => {
+      expect(CalculatorStore.operators).toEqual(new Stack());
     });
 
     test('.lastInputType to be empty', () => {
