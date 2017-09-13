@@ -24,18 +24,18 @@ const testCases = [
     actions: [1, '+', 5, '*', 2, '='],
     result: '11',
   },
-  // {
-  //   actions: [1, '*', 5, '+', 2, '='],
-  //   result: '7',
-  // },
+  {
+    actions: [1, '*', 5, '+', 2, '='],
+    result: '7',
+  },
   // {
   //   actions: [1, '+', 5, '+', 2, '='],
   //   result: '8',
   // },
-  {
-    actions: [1, '+', 5, '*', 2, '+'],
-    result: '11',
-  },
+  // {
+  //   actions: [1, '+', 5, '*', 2, '+'],
+  //   result: '11',
+  // },
   // {
   //   actions: [1, '+', 5, '*', 2, '/'],
   //   result: '10',
@@ -52,6 +52,10 @@ const testCases = [
   //   actions: [1, '+', 5, '*', 2, '/', 2, '+'],
   //   result: '6',
   // },
+  {
+    actions: [1, '+', 9, '=', 2, '='],
+    result: '11',
+  },
 ];
 
 module.exports = testCases;

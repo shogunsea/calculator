@@ -12,8 +12,6 @@ import {isPlusMinus, isMultiplyDivide} from './helper';
  * @class CalculatorStore
  */
 
- // TODO: use singleton pattern to avoid multiple instances been created
-
  // " a store registers itself with the dispatcher and provides it with a callback. " ---> Dependency Inversion or not.
 class CalculatorStore {
   // lower module implements abstraction. contains details.
@@ -26,9 +24,6 @@ class CalculatorStore {
     this.lastInputType = '';
     this.operands = new Stack();
     this.operators = new Stack();
-
-
-    // seperate this call into init method?
     this._registerToDispatcher();
   }
 
@@ -76,11 +71,11 @@ class CalculatorStore {
   }
 
   _switchSign() {
-    this.currentValue = -this.currentValue;
+    this.result = -this.result;
   }
 
   _percent() {
-    this.currentValue = 0.01 * this.currentValue;
+    this.result = 0.01 * this.result;
   }
 
   _modifyResult(value) {
@@ -91,6 +86,7 @@ class CalculatorStore {
     } else if (value === 'percent') {
       this._percent();
     }
+    this._displayResult(this.result);
   }
 
   _add(leftOperand, rightOperand, unsetResult) {
@@ -127,24 +123,19 @@ class CalculatorStore {
   // number only. how about dot?
   // * Receiving operands should never trigger evaluation.
   _receiveOperand(value) {
-    // if last operation is 'evaluate' then reset.
     let currentValue = +value;
 
     if (this.lastInputType === 'operand' && this.operands.size() > 0) {
       const previousValue = this.operands.pop();
       currentValue = (previousValue * 10 + currentValue);
-    } else if (this.lastInputType === 'operator') {
-      // const a = 1;
     }
 
     this.operands.push(currentValue);
-
     this.lastInputType = 'operand';
     this._displayResult(currentValue);
   }
 
-
-  // *
+  // * Receiving operators *MIGHT* trigger evaluation.
   _receiveOperator(currentOperator) {
     const previousOperator = this.operators.peek();
     const previousPlusMinus = isPlusMinus(previousOperator);
@@ -154,82 +145,41 @@ class CalculatorStore {
 
     // actions: [1, '+', 5, '*', 2, '='],
     // result: '11',
-
     if (previousPlusMinus) {
       if (currentPlusMinus) {
         // evaluate
         this._evaluate();
       } else if (currentMultiplyDivide) {
         // no action: only store
-
       }
     } else if (previousMultiplyDivide) {
       if (currentPlusMinus) {
         // evaluate
         this._evaluate();
-
-
       } else if (currentMultiplyDivide) {
         // evaluate
         this._evaluate();
-
       }
     }
 
     this.operators.push(currentOperator);
-
-    // if (previousPlusMinus && currentPlusMinus) {
-    //   // evaluate
-    // } else if (previousMultiplyDivide && currentMultiplyDivide) {
-    //   // evaluate
-    // } else if (previousMultiplyDivide && currentPlusMinus && operatorsContainsPlusMinus) {
-    //   // evaluate up until +/- are consumed --- that should be all the
-    //   // operations left right?
-    // } else if (previousPlusMinus && currentMultiplyDivide) {
-    //   // no action: only store
-    // }
-
-    // if (isPlusMinus(previousOperator) && isPlusMinus(currentOperator)) {
-    //   // evaluate
-    // } else if (isMultiplyDivide(previousOperator) && isMultiplyDivide(currentOperator)) {
-    //   // evaluate
-    // } else if (isMultiplyDivide(previousOperator) && isPlusMinus(currentOperator) && ) {
-
-    // } else if (false) {
-    //   return;
-    // }
-
-
-    // ?
-    // if (currentOperator === 'plus' || currentOperator === 'minus') {
-    //   this._evaluate();
-    //   this.operators.pop();
-    //   this.operators.push(currentOperator);
-    // } else {
-    //   this.operators.push(currentOperator);
-    // }
-
     this.lastInputType = 'operator';
-    // this.currentOperator = operator;
   }
 
   _evaluate() {
     let leftOperand = 0;
     let rightOperand = 0;
     let operator = '';
-    debugger
-    // Notes:
-    // 1. sign of a new round of computation: after evaluation, there's a operand coming in. e.g ... '='. '3'  you should call reset when that happens.
 
-    //for continuous computation
-    // if rightOperandsHaveBeenReserved && newOperandComingIn
-    // then dequeue from operands
-
-    // previous right operator was store; but if new value coming in and result is present, we don't need previous right operator
+    // *Start: Pre-process*
+    // previous right operand is stored by default, but if new value coming in
+    // and result is present, we don't need previous right operator
     if (this.lastInputType === 'operand' && this.result != null) {
       this.operands.shift();
     }
+    // *End: Pre-process*
 
+    // *Start: Collect value for operands and operators *
     if (this.operands.size() === 1) { // test case: 4 + =
       rightOperand = this.operands.peek(); // peek
       leftOperand = this.result == null? rightOperand : this.result;
@@ -238,44 +188,29 @@ class CalculatorStore {
       leftOperand = this.operands.pop();
     }
 
-    // 1 + 2 =
-    if (this.operands.isEmpty()) { // always reserve rightOperand in case of
-      // continuous evaluation
+    // always reserve rightOperand in case of continuous evaluation
+    if (this.operands.isEmpty()) {
       this.operands.push(rightOperand);
     }
 
     if (this.operators.size() <= 1) {
-      operator = this.operators.peek(); // peek
+      operator = this.operators.peek();
     } else {
-      operator = this.operators.pop(); // pop
+      operator = this.operators.pop();
     }
+
+    // *END: Collect value for operands and operators *
 
     this.lastInputType = 'operator';
 
-
+    // Actual computation
+    // while !terminationCondition
+    //    compute
+    // --> Loop twice max?
     this._compute(leftOperand, rightOperand, operator);
-
-    // if (evaluateTwice) { // while stopConditionNotMet: loop
-    //   const tempResult = this._compute(leftOperand, rightOperand, operator, true);
-
-    //   // console.log({tempResult});
-
-    //   const newRightOperand = tempResult;
-    //   const rightOperator = operator;
-    //   const leftMostOperand = this.operands.pop();
-    //   const newOperator = this.operators.pop();
-    //   this.operands.push(rightOperand);
-    //   this.operators.push(rightOperator);
-
-    //   this._compute(leftMostOperand, newRightOperand, newOperator);
-
-    // } else {
-    //   this._compute(leftOperand, rightOperand, operator);
-    // }
   }
 
   _compute(leftOperand, rightOperand, operator, unsetResult) {
-    // const {unsetResult, evaluateTwice} = options;
     switch (operator) {
       case 'plus':
         return this._add(leftOperand, rightOperand, unsetResult);
