@@ -15,5 +15,6 @@
      "max-len": [2, 100, 4, { "ignoreStrings": true }],
      "require-jsdoc": "off",
      "no-invalid-this": "off"
-   }
+   },
+   "parser": "babel-eslint"
  }

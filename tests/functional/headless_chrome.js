@@ -3,6 +3,7 @@
 import puppeteer from 'puppeteer';
 import {valueTransformer} from '../helper';
 
+
 let browserInstance = null;
 let pageInstance = null;
 
@@ -21,7 +22,7 @@ const start = async () => {
 
   browserInstance = browser;
   pageInstance = page;
-}
+};
 
 const stop = async () => {
   if (browserInstance === null) {
@@ -30,21 +31,27 @@ const stop = async () => {
   }
 
   browserInstance.close();
-}
+};
 
 const evaluate = async (actions) => {
-  const clearButton = '#button_clear';
-  await pageInstance.click(clearButton);
+  await pageInstance.evaluate(() => {
+    const clearButton = '#button_clear';
+    return document.querySelector(clearButton).click();
+  });
 
   for (let action of actions) {
     const buttonID = `#button_${valueTransformer(action)}`;
-    await pageInstance.click(buttonID);
+    await pageInstance.evaluate(async (buttonID) => {
+      return document.querySelector(buttonID).click();
+    }, buttonID);
   }
 
-  const resultElementHandle = await pageInstance.$('.result');
-  const result = await resultElementHandle.evaluate((e) => e.innerText);
+  const result = await pageInstance.evaluate(() => {
+    const value = document.querySelector('.result').innerText;
+    return value;
+  });
 
   return result;
-}
+};
 
 export default {start, stop, evaluate};

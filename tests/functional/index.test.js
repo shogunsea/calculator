@@ -11,7 +11,7 @@ import mixedOperationTests from '../test_cases/mixed_operation';
 describe('Integration tests', () => {
   beforeAll(async () => {
     await HeadlessChrome.start();
-  })
+  });
 
   afterAll(async () => {
     // stop app server here.
@@ -19,12 +19,12 @@ describe('Integration tests', () => {
     await HeadlessChrome.stop();
   });
 
-  describe('Addition', async () => {
+  describe.only('Addition', async () => {
     for (let {actions, result} of additionTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
-      })
+      });
     }
   });
 
@@ -33,7 +33,7 @@ describe('Integration tests', () => {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
-      })
+      });
     }
   });
 
@@ -42,7 +42,7 @@ describe('Integration tests', () => {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
-      })
+      });
     }
   });
 
@@ -51,7 +51,7 @@ describe('Integration tests', () => {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
-      })
+      });
     }
   });
 
@@ -61,9 +61,7 @@ describe('Integration tests', () => {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);
-      })
+      });
     }
   });
-
-})
-
+});
