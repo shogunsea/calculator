@@ -63,7 +63,6 @@ class CalculatorStore {
   }
 
   _clear() {
-    // this.result = null;
     this.operands = new Stack();
     this.operators = new Stack();
     this.lastInputType = '';
@@ -93,10 +92,7 @@ class CalculatorStore {
   _add(leftOperand, rightOperand) {
     const result = leftOperand + rightOperand;
     this.operands.push(result);
-    // this.result = result;
     this._displayResult();
-
-  // return result;
   }
 
   _minus(leftOperand, rightOperand) {
@@ -131,7 +127,6 @@ class CalculatorStore {
     this._displayResult();
   }
 
-  // number only. how about dot?
   // * Receiving operands should never trigger evaluation.
   _receiveOperand(value) {
     let currentValue = +value;
@@ -154,30 +149,19 @@ class CalculatorStore {
     const currentPlusMinus = isPlusMinus(currentOperator);
     const currentMultiplyDivide = isMultiplyDivide(currentOperator);
 
-    // actions: [1, '+', 5, '*', 2, '='],
-    // result: '11',
-    // hypothesis: pushing result to the stack would solve the problem..?
-    // action:
-    // 1.try setting result to top of the operands Stack
-    // 2. peek stack to display the value
-
-
     // 5 + + --> stay at 5
     // 5 + 1 + --> evaluate
     const invokedByOperator = {plusMinus: currentPlusMinus};
     if (previousPlusMinus && this.lastInputType !== 'operator') {
       if (currentPlusMinus) {
-        // evaluate
         this._evaluate(invokedByOperator);
       } else if (currentMultiplyDivide) {
         // no action: only store
       }
     } else if (previousMultiplyDivide) {
       if (currentPlusMinus) {
-        // evaluate
         this._evaluate(invokedByOperator);
       } else if (currentMultiplyDivide) {
-        // evaluate
         this._evaluate(invokedByOperator);
       }
     }
@@ -202,19 +186,9 @@ class CalculatorStore {
     let operator = '';
     const operatorsLen = this.operators.size();
 
-    // *Start: Pre-process*
-    // previous right operand is stored by default, but if new value coming in
-    // and result is present, we don't need previous right operator
-    // if (this.lastInputType === 'operand' && this.result != null) {
-    // debugger
-    // if (this.lastInputType === 'operand' && this.operands.size() > 1) {
-    //     this.operands.shift();
-    // }
-    // *End: Pre-process*
-
     // *Start: Collect value for operands and operators *
     if (this.operands.size() === 1) { // test case: 4 + =
-      rightOperand = this.operands.peek(); // peek
+      rightOperand = this.operands.peek();
       leftOperand = this.result == null? rightOperand : this.result;
     } else {
       rightOperand = this.operands.pop();
@@ -231,21 +205,13 @@ class CalculatorStore {
     } else {
       operator = this.operators.pop();
     }
-
     // *END: Collect value for operands and operators *
 
     this.lastInputType = 'operator';
 
-    // Actual computation
-    // while !terminationCondition
-    //    compute
-    // --> Loop twice max?
-
-
     const result = this._compute(leftOperand, rightOperand, operator);
     this.operands.push(result);
 
-    // console.log({invokedByOperator});
     if (operatorsLen > 1 && (!invokedByOperator || invokedByOperator.plusMinus)) {
       this._evaluate();
     }
@@ -282,10 +248,10 @@ class CalculatorStore {
       // log current state
       console.log('Current state: ');
       const data = {
-        // result: this.result,
         operators: this.operators,
         operands: this.operands,
         lastInputType: this.lastInputType,
+        lastAction: this.lastAction,
       };
 
       console.log(JSON.stringify(data, null, 2));
