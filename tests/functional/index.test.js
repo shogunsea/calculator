@@ -19,7 +19,7 @@ describe('Integration tests', () => {
     await HeadlessChrome.stop();
   });
 
-  describe.only('Addition', async () => {
+  describe('Addition', async () => {
     for (let {actions, result} of additionTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
@@ -55,8 +55,7 @@ describe('Integration tests', () => {
     }
   });
 
-  xdescribe('Mixed operation', async () => {
-  // describe.only('Mixed operation', async () => {
+  describe('Mixed operation', async () => {
     for (let {actions, result} of mixedOperationTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);

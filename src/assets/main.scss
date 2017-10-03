@@ -1,5 +1,6 @@
 $button-radius: 9px;
 $operator-panel-color: rgb(233, 151, 72);
+$operator-panel-active-color: rgb(235, 134, 39);
 $operand-panel-color: rgba(212, 212, 212, 0.49);
 $operand-panel-active-color: rgba(195, 195, 195, 0.61);
 $display-panel-background: #3b3b40;
@@ -98,11 +99,11 @@ body {
   border-radius: 0 0 $button-radius 0;
 
   & .button:active {
-    background: $operator-panel-color;
+    background: $operator-panel-active-color;
   }
 
   & .button:focus {
-    background: $operator-panel-color;
+    background: $operator-panel-active-color;
   }
 
   #button_evaluate {
@@ -111,6 +112,7 @@ body {
 }
 
 .button {
+  outline: none;
   border: 0.1px solid grey;
   color: #fff;
   display: flex;

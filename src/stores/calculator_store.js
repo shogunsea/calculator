@@ -12,16 +12,16 @@ import {isPlusMinus, isMultiplyDivide} from './helper';
  * @class CalculatorStore
  */
 
- // " a store registers itself with the dispatcher and provides it with a callback. " ---> Dependency Inversion or not.
+ // " a store registers itself with the dispatcher and provides it with
+ // a callback. " ---> Dependency Inversion or not.
 class CalculatorStore {
   // lower module implements abstraction. contains details.
   // Store should be initialized with dispatcher instance.
   constructor() {
     this.dispatcher = Dispatcher.getInstance();
     this.view = ControllerView;
-    this.result = null; // result should stay null before any computation takes place
-    this.currentOperator = '';
     this.lastInputType = '';
+    this.lastAction = '';
     this.operands = new Stack();
     this.operators = new Stack();
     this._registerToDispatcher();
@@ -37,19 +37,20 @@ class CalculatorStore {
       case ActionTypes.OPERATOR_INPUT:
         this._receiveOperator(value);
         break;
+      case ActionTypes.MODIFY:
+        this._modifyResult(value);
+        break;
       case ActionTypes.EVALUATE:
         this._evaluate();
         break;
       case ActionTypes.DISPLAY_RESULT:
         this._displayResult();
         break;
-      case ActionTypes.MODIFY:
-        this._modifyResult(value);
-        break;
       default:
         break;
     }
 
+    this.lastAction = action;
     this._logger();
   }
 
@@ -62,11 +63,11 @@ class CalculatorStore {
   }
 
   _clear() {
-    this.result = null;
+    // this.result = null;
     this.operands = new Stack();
     this.operators = new Stack();
     this.lastInputType = '';
-    this._displayResult(0);
+    this._displayResult();
     console.clear();
   }
 
@@ -86,38 +87,48 @@ class CalculatorStore {
     } else if (value === 'percent') {
       this._percent();
     }
-    this._displayResult(this.result);
+    this._displayResult();
   }
 
-  _add(leftOperand, rightOperand, unsetResult) {
+  _add(leftOperand, rightOperand) {
     const result = leftOperand + rightOperand;
-    if (!unsetResult) {
-      this.result = result;
-      this._displayResult(result);
-    }
+    this.operands.push(result);
+    // this.result = result;
+    this._displayResult();
 
-    return result;
+  // return result;
   }
 
   _minus(leftOperand, rightOperand) {
-    const result = leftOperand - rightOperand;
-    this.result = result;
-    this._displayResult(result);
+    let result = 0;
+
+    if (this.lastAction === ActionTypes.EVALUATE) {
+      result = rightOperand - leftOperand;
+    } else {
+      result = leftOperand - rightOperand;
+    }
+
+    this.operands.push(result);
+    this._displayResult();
   }
 
-  _multiply(leftOperand, rightOperand, unsetResult) {
+  _multiply(leftOperand, rightOperand) {
     const result = leftOperand * rightOperand;
-    if (!unsetResult) {
-      this.result = result;
-      this._displayResult(result);
-    }
-    return result;
+    this.operands.push(result);
+
+    this._displayResult();
   }
 
   _divide(leftOperand, rightOperand) {
-    const result = leftOperand / rightOperand;
-    this.result = result;
-    this._displayResult(result);
+    let result = 0;
+    if (this.lastAction === ActionTypes.EVALUATE) {
+      result = rightOperand / leftOperand;
+    } else {
+      result = leftOperand / rightOperand;
+    }
+
+    this.operands.push(result);
+    this._displayResult();
   }
 
   // number only. how about dot?
@@ -132,7 +143,7 @@ class CalculatorStore {
 
     this.operands.push(currentValue);
     this.lastInputType = 'operand';
-    this._displayResult(currentValue);
+    this._displayResult();
   }
 
   // * Receiving operators *MIGHT* trigger evaluation.
@@ -145,20 +156,39 @@ class CalculatorStore {
 
     // actions: [1, '+', 5, '*', 2, '='],
     // result: '11',
-    if (previousPlusMinus) {
+    // hypothesis: pushing result to the stack would solve the problem..?
+    // action:
+    // 1.try setting result to top of the operands Stack
+    // 2. peek stack to display the value
+
+
+    // 5 + + --> stay at 5
+    // 5 + 1 + --> evaluate
+    const invokedByOperator = {plusMinus: currentPlusMinus};
+    if (previousPlusMinus && this.lastInputType !== 'operator') {
       if (currentPlusMinus) {
         // evaluate
-        this._evaluate();
+        this._evaluate(invokedByOperator);
       } else if (currentMultiplyDivide) {
         // no action: only store
       }
     } else if (previousMultiplyDivide) {
       if (currentPlusMinus) {
         // evaluate
-        this._evaluate();
+        this._evaluate(invokedByOperator);
       } else if (currentMultiplyDivide) {
         // evaluate
-        this._evaluate();
+        this._evaluate(invokedByOperator);
+      }
+    }
+
+    if (this.lastInputType == 'operator') {
+      const remainPlusMinus = isPlusMinus(this.operators.peek());
+      if (remainPlusMinus && currentMultiplyDivide) {
+        // do nothing:
+        // [1, '+', 5, '*', 2, '/', 2, '='] --> 6
+      } else {
+        this.operators.pop();
       }
     }
 
@@ -166,17 +196,20 @@ class CalculatorStore {
     this.lastInputType = 'operator';
   }
 
-  _evaluate() {
+  _evaluate(invokedByOperator) {
     let leftOperand = 0;
     let rightOperand = 0;
     let operator = '';
+    const operatorsLen = this.operators.size();
 
     // *Start: Pre-process*
     // previous right operand is stored by default, but if new value coming in
     // and result is present, we don't need previous right operator
-    if (this.lastInputType === 'operand' && this.result != null) {
-      this.operands.shift();
-    }
+    // if (this.lastInputType === 'operand' && this.result != null) {
+    // debugger
+    // if (this.lastInputType === 'operand' && this.operands.size() > 1) {
+    //     this.operands.shift();
+    // }
     // *End: Pre-process*
 
     // *Start: Collect value for operands and operators *
@@ -189,7 +222,7 @@ class CalculatorStore {
     }
 
     // always reserve rightOperand in case of continuous evaluation
-    if (this.operands.isEmpty()) {
+    if (this.operands.isEmpty() && !invokedByOperator) {
       this.operands.push(rightOperand);
     }
 
@@ -207,13 +240,21 @@ class CalculatorStore {
     // while !terminationCondition
     //    compute
     // --> Loop twice max?
-    this._compute(leftOperand, rightOperand, operator);
+
+
+    const result = this._compute(leftOperand, rightOperand, operator);
+    this.operands.push(result);
+
+    // console.log({invokedByOperator});
+    if (operatorsLen > 1 && (!invokedByOperator || invokedByOperator.plusMinus)) {
+      this._evaluate();
+    }
   }
 
-  _compute(leftOperand, rightOperand, operator, unsetResult) {
+  _compute(leftOperand, rightOperand, operator) {
     switch (operator) {
       case 'plus':
-        return this._add(leftOperand, rightOperand, unsetResult);
+        return this._add(leftOperand, rightOperand);
       case 'minus':
         return this._minus(leftOperand, rightOperand);
       case 'multiply':
@@ -225,7 +266,8 @@ class CalculatorStore {
     }
   }
 
-  _displayResult(value) {
+  _displayResult() {
+    const value = this.operands.peek() || 0;
     const formattedValue = new Intl.NumberFormat('en-US', {maximumFractionDigits: 20}).format(value);
     this.view.render('UPDATE_VIEW', formattedValue);
   }
@@ -240,7 +282,7 @@ class CalculatorStore {
       // log current state
       console.log('Current state: ');
       const data = {
-        result: this.result,
+        // result: this.result,
         operators: this.operators,
         operands: this.operands,
         lastInputType: this.lastInputType,

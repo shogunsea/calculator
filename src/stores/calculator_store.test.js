@@ -16,10 +16,6 @@ describe('Calculator store', () => {
       expect(CalculatorStore.view).toBe(ControllerView);
     });
 
-    test('.result to be null', () => {
-      expect(CalculatorStore.result).toBe(null);
-    });
-
     test('.operands to be an instacne of Stack', () => {
       expect(CalculatorStore.operands).toEqual(new Stack());
     });
@@ -30,6 +26,10 @@ describe('Calculator store', () => {
 
     test('.lastInputType to be empty', () => {
       expect(CalculatorStore.lastInputType).toBe('');
+    });
+
+    test('.lastAction to be empty', () => {
+      expect(CalculatorStore.lastAction).toBe('');
     });
   });
 
