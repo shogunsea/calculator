@@ -71,11 +71,15 @@ class CalculatorStore {
   }
 
   _switchSign() {
-    this.result = -this.result;
+    let value = -this.operands.pop();
+    this.operands.push(value);
+    this._displayResult();
   }
 
   _percent() {
-    this.result = 0.01 * this.result;
+    let value = 0.01 * this.operands.pop();
+    this.operands.push(value);
+    this._displayResult();
   }
 
   _modifyResult(value) {

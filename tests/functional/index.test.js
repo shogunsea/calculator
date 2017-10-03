@@ -7,6 +7,8 @@ import subtractionTests from '../test_cases/subtraction';
 import multiplicationTests from '../test_cases/multiplication';
 import divisionTests from '../test_cases/division';
 import mixedOperationTests from '../test_cases/mixed_operation';
+import signTests from '../test_cases/sign';
+import percentTests from '../test_cases/percent';
 
 describe('Integration tests', () => {
   beforeAll(async () => {
@@ -57,6 +59,24 @@ describe('Integration tests', () => {
 
   describe('Mixed operation', async () => {
     for (let {actions, result} of mixedOperationTests) {
+      test(`${actions} yeilds to ${result}`, async () => {
+        const actualResult = await HeadlessChrome.evaluate(actions);
+        expect(actualResult).toBe(result);
+      });
+    }
+  });
+
+  describe('Sign', async () => {
+    for (let {actions, result} of signTests) {
+      test(`${actions} yeilds to ${result}`, async () => {
+        const actualResult = await HeadlessChrome.evaluate(actions);
+        expect(actualResult).toBe(result);
+      });
+    }
+  });
+
+  describe('Percent', async () => {
+    for (let {actions, result} of percentTests) {
       test(`${actions} yeilds to ${result}`, async () => {
         const actualResult = await HeadlessChrome.evaluate(actions);
         expect(actualResult).toBe(result);

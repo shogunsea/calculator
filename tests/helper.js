@@ -31,7 +31,9 @@ const valueTransformer = (value) => {
       return 'divide';
     case '=':
       return 'evaluate';
-  };
+    default:
+      return value;
+  }
 };
 
 module.exports = {valueTransformer};
