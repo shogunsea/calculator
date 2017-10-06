@@ -1,6 +1,6 @@
 {
   "name": "one-calculator",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Plain calculator mirco app in HTML/CSS/JS.",
   "main": "index.js",
   "scripts": {

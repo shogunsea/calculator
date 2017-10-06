@@ -1,5 +1,5 @@
 $button-radius: 9px;
-$operator-panel-color: rgb(233, 151, 72);
+$operator-panel-color: #f79331;
 $operator-panel-active-color: rgb(235, 134, 39);
 $operand-panel-color: rgba(212, 212, 212, 0.49);
 $operand-panel-active-color: rgba(195, 195, 195, 0.61);
@@ -62,7 +62,7 @@ body {
   }
 
   #button_zero {
-    border-bottom-left-radius: $button-radius;
+    border-radius: 0 0 0 $button-radius;
     flex-basis: 4px;
     flex-grow: 2;
   }
@@ -113,7 +113,7 @@ body {
 
 .button {
   outline: none;
-  border: 0.1px solid grey;
+  border: 0.5px solid grey;
   color: #fff;
   display: flex;
   justify-content: center;
